@@ -4,12 +4,13 @@
 public class RobotStats {
     boolean isFinal = false;
     int moves = 0;
-    Color robot;
+    Color color;
+    Direction direction;
 
-    public RobotStats(boolean isFinal, int moves, Color robot){
+    public RobotStats(boolean isFinal, int moves, Color color, Direction direction){
         this.isFinal = isFinal;
         this.moves = moves;
-        this.robot = robot;
+        this.color = color;
+        this.direction = direction;
     }
-
 }

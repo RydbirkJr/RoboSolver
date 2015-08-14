@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -7,26 +8,30 @@ public class MapHandler {
     public Game setupNewGame(){
         Game game = new Game();
         game.gameBoard = new GameBoard(getHorizontalObstacles(), getVerticalObstacles(), getGoals());
-        game.robotFields = getAllowedStartFields(game.gameBoard);
+        game.robots = placeRobotsOnAllowedFields(game.gameBoard);
         return game;
     }
 
     public Game getNewPositions(GameBoard gameBoard){
         Game game = new Game();
         game.gameBoard = gameBoard;
-        game.robotFields = getAllowedStartFields(gameBoard);
+        game.robots = placeRobotsOnAllowedFields(gameBoard);
         return game;
     }
 
-    private HashSet<Field> getAllowedStartFields(GameBoard gameBoard){
+    private ArrayList<Robot> placeRobotsOnAllowedFields(GameBoard gameBoard){
+        //To ensure no robots is placed on the same startField
         HashSet<Field> robotFields = new HashSet<Field>();
+
+        //To hold the robots with the startField positions
+        ArrayList<Robot> robotList = new ArrayList<Robot>();
 
         int min = 0;
         int max = 15;
 
         for(int i = 0; i < 4; i++){
 
-            Field field = null;
+            Field field;
 
             do{
                 int row = getRandom(min, max);
@@ -34,19 +39,18 @@ public class MapHandler {
 
                 field = gameBoard.fields[row][col];
 
-                //Runs until a legal field is found
+                //Runs until a legal startField is found
             }while(robotFields.contains(field) || field.isGoalField);
-            field.robotStats = new HashMap<Color, TreeSet<RobotStats>>();
 
             //Convert i into the Color enum
             Color color = Color.values()[i];
-            //Initiate hashmap and tree set for each robot color
-            field.robotStats.put(color, new TreeSet<RobotStats>());
-            field.robotStats.get(color).add(new RobotStats(true, 0, Color.values()[i]));
-            robotFields.add(field);
+
+            Robot robot = new Robot(color, field, 0);
+            field.isStartField = true;
+            robotList.add(robot);
         }
 
-        return robotFields;
+        return robotList;
     }
 
     private int getRandom(int min, int max){
