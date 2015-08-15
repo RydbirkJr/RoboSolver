@@ -3,8 +3,10 @@
  */
 public class GameResult {
     public int moves;
+    public RobotStats stats;
 
-    public GameResult(int moves){
+    public GameResult(int moves, RobotStats stats){
         this.moves = moves;
+        this.stats = stats;
     }
 }

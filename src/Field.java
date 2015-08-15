@@ -78,12 +78,12 @@ public class Field {
         return finalIndicators != null && finalIndicators.contains(color);
     }
 
-    public int getResult(){
+    public RobotStats getResult(){
         for(RobotStats stats : finalStats){
-            if(stats.color == goalColor) return stats.moves;
+            if(stats.color == goalColor) return stats;
         }
 
-        return 0;
+        return null;
     }
 
     public RobotStats getFinalFromOtherRobots(Color color){
@@ -105,7 +105,7 @@ public class Field {
      * @param robot
      * @param direction The direction the given robot has to travel to hit the final field
      */
-    public boolean bubbleDownField(Robot robot, Direction direction){
+    public boolean bubbleDownField(RobotStats robot, Direction direction){
 
         //In case no final stats exists: return
         if(intermediateStats == null) return false;
@@ -114,7 +114,7 @@ public class Field {
         for(RobotStats stats : intermediateStats){
             if(stats.color != robot.color && stats.direction == direction){
                 //Correct direction and the right color
-                stats.moves += robot.moveCount;
+                stats.moves += robot.moves;
                 stats.isFinal = true;
                 intermediateStats.remove(stats);
                 finalIndicators.add(stats.color);

@@ -23,20 +23,37 @@ public class GameHandler {
 
         StopWatch watch = new StopWatch();
         for(Goal goal : game.gameBoard.goals){
-
-            watch.start("Goal: " + formatOutput(goal.color, goal.row, goal.col));
+            String goalString = "Goal: " + formatOutput(goal.color, goal.row, goal.col);
+            watch.start(goalString);
             RoboSolver solver = new RoboSolver(game, goal);
-            GameResult result = solver.solveGame();
+            RobotStats result = solver.solveGame();
             watch.stop();
-            System.out.println("Result: " + result.moves);
+            if(result == null) continue;
+            System.out.println("Result: " + goalString);
+            printRobotPath(result);
         }
         System.out.println(watch.prettyPrint());
         System.out.println("Terminated");
     }
 
     private String formatOutput(Color color, int row, int col){
-        String formatColor = (color == Color.RED || color == Color.BLUE) ? "\t" : "" ;
+        String formatColor = (color == Color.RED) ? "\t" : "" ;
         return color.name() +formatColor + "\t" + (row + 1) + "\t" + (col + 1);
+    }
+
+    private void printRobotPath(RobotStats stats){
+        while(stats.direction != Direction.NONE){
+            //Print: moves, field, direction
+            String output = stats.color.name().substring(0,1) + "\t";
+            output += stats.moves + "\t";
+            output += "(" + (stats.field.row +1) + ":" + (stats.field.col + 1) + ")\t";
+            output += stats.direction.name().substring(0,1);
+            System.out.println(output);
+            if(stats.dependUpon != null){
+                printRobotPath(stats.dependUpon);
+            }
+            stats = stats.prevRobot;
+        }
     }
 
     private void printBoard(Game game){
