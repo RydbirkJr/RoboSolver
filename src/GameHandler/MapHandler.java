@@ -1,3 +1,7 @@
+package GameHandler;
+
+import Core.*;
+
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -5,21 +9,15 @@ import java.util.*;
  * Created by Anders on 07/08/15.
  */
 public class MapHandler {
-    public Game setupNewGame(){
-        Game game = new Game();
-        game.gameBoard = new GameBoard(getHorizontalObstacles(), getVerticalObstacles(), getGoals());
-        game.robots = placeRobotsOnAllowedFields(game.gameBoard);
-        return game;
+    public GameBoard setupGameBoard(){
+        return new GameBoard(
+                getHorizontalObstacles(),
+                getVerticalObstacles(),
+                getGoals()
+        );
     }
 
-    public Game getNewPositions(GameBoard gameBoard){
-        Game game = new Game();
-        game.gameBoard = gameBoard;
-        game.robots = placeRobotsOnAllowedFields(gameBoard);
-        return game;
-    }
-
-    private ArrayList<Robot> placeRobotsOnAllowedFields(GameBoard gameBoard){
+    public Robot[] getRobotPositions(GameBoard gameBoard){
         //To ensure no robots is placed on the same startField
         HashSet<Field> robotFields = new HashSet<Field>();
 
@@ -40,17 +38,16 @@ public class MapHandler {
                 field = gameBoard.fields[row][col];
 
                 //Runs until a legal startField is found
-            }while(robotFields.contains(field) || field.isGoalField);
+            }while(robotFields.contains(field) || field instanceof Goal);
 
-            //Convert i into the Color enum
+            //Convert i into the Core.Color enum
             Color color = Color.values()[i];
 
-            Robot robot = new Robot(color, field, 0);
-            field.isStartField = true;
+            Robot robot = new Robot(color, field);
             robotList.add(robot);
         }
 
-        return robotList;
+        return robotList.toArray(new Robot[robotList.size()]);
     }
 
     private int getRandom(int min, int max){
@@ -120,7 +117,7 @@ public class MapHandler {
         return vertical;
     }
 
-    private ArrayList<Goal> getGoals(){
+    private Goal[] getGoals(){
         ArrayList<Goal> goals = new ArrayList<Goal>();
         goals.add(new Goal(1,2,Color.YELLOW));
         goals.add(new Goal(1,12,Color.RED));
@@ -133,12 +130,12 @@ public class MapHandler {
         goals.add(new Goal(9,3,Color.YELLOW));
         goals.add(new Goal(9,10,Color.BLUE));
         goals.add(new Goal(11,1,Color.RED));
-        goals.add(new Goal(11,9,Color.YELLOW));
+        goals.add(new Goal(11,9, Color.YELLOW));
         goals.add(new Goal(12,6,Color.BLUE));
         goals.add(new Goal(12,4,Color.GREEN));
         goals.add(new Goal(14,2,Color.GREEN));
         goals.add(new Goal(14,13,Color.RED));
 
-        return goals;
+        return goals.toArray(new Goal[goals.size()]);
     }
 }

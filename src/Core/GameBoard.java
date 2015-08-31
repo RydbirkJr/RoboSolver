@@ -1,43 +1,27 @@
-import java.lang.reflect.Array;
+package Core;
+
 import java.util.ArrayList;
 
 /**
  * Created by Anders on 07/08/15.
  */
 public class GameBoard {
-    public Field[][] fields;
-    public ArrayList<Goal> goals;
+    public final Field[][] fields;
+    public final Goal[] goals;
 
-    public GameBoard(ArrayList<Obstacle> horizontal, ArrayList<Obstacle> vertical, ArrayList<Goal> goals){
+    public GameBoard(ArrayList<Obstacle> horizontal, ArrayList<Obstacle> vertical, Goal[] goals){
         fields = new Field[16][16];
         this.goals = goals;
+
+        //Init goals - before other fields are initiated
+        for(Goal goal : goals){
+            fields[goal.row][goal.col] = goal;
+        }
 
         initOuterBoundaries();
         initObstacles(horizontal, vertical);
 
-        //Init goals
-        for(Goal goal : goals){
-            fields[goal.row][goal.col].isGoalField = true;
-            fields[goal.row][goal.col].goalColor = goal.color;
-        }
-    }
 
-    public Field getField(Field currentField, Direction direction){
-        int row = currentField.row;
-        int col = currentField.col;
-
-        switch (direction){
-            case NORTH: row--;
-                break;
-            case EAST: col++;
-                break;
-            case SOUTH: row++;
-                break;
-            case WEST: col--;
-                break;
-        }
-
-        return fields[row][col];
     }
 
     private  void initObstacles(ArrayList<Obstacle> horizontal, ArrayList<Obstacle> vertical){
@@ -58,8 +42,8 @@ public class GameBoard {
 
         for(int row = 0; row < 16; row++){
             for(int col = 0; col < 16; col++){
-                //Init temporary startField
-                Field tempField = new Field(row, col);
+                //Init temporary startField unless already set
+                Field tempField = fields[row][col] == null ? new Field(row, col) : fields[row][col];
 
                 //Set standard limits - outer bounds
                 switch (row){

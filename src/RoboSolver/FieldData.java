@@ -1,41 +1,50 @@
+package RoboSolver;
+
+import Core.Color;
+import Core.Direction;
+import Core.Field;
+
 import java.util.*;
 
 /**
- * Created by Anders on 05/08/15.
+ * Created by Anders on 27/08/15.
  */
-public class Field {
-    int row;
-    int col;
-    boolean canNorth = true;
-    boolean canSouth = true;
-    boolean canEast = true;
-    boolean canWest = true;
-    boolean isGoalField = false;
-    boolean isStartField = false;
-    boolean isVisited = false;
-    private HashSet<Color> finalIndicators;
-    Color goalColor;
-    private HashMap<Color, TreeSet<RobotStats>> robotStats;
+public class FieldData {
+    //private HashMap<Color, TreeSet<RobotStats>> robotStats;
     private ArrayList<RobotStats> finalStats;
     private ArrayList<RobotStats> intermediateStats;
+    private HashSet<Color> finalIndicators;
 
-    public Field(int row, int col){
+    public RobotStats starter;
+    public Field field;
+    public int row;
+    public int col;
+
+    public FieldData(int row, int col, Field field){
         this.row = row;
         this.col = col;
+        this.field = field;
+        this.finalStats = new ArrayList<RobotStats>();
+        this.intermediateStats = new ArrayList<RobotStats>();
+        this.finalIndicators = new HashSet<Color>();
+    }
+
+    /**
+     * Adds the stats to the different data structures.
+     * In case there's already a final stat for the given color, returns false.
+     * @param stats
+     * @return False if color is already final on field.
+     */
+
+    public void setStarter(RobotStats stats){
+        this.starter = stats;
+        addRobotStats(stats);
     }
 
     public boolean addRobotStats(RobotStats stats){
 
-        //Check if robotStats is set
-        if(robotStats == null){
-            robotStats = new HashMap<Color, TreeSet<RobotStats>>();
-            isVisited = true;
-            finalIndicators = new HashSet<Color>();
-            finalStats = new ArrayList<RobotStats>();
-            intermediateStats = new ArrayList<RobotStats>();
-        }
-
         if(finalIndicators.contains(stats.color)){
+            //if it's already visited by a final of the same color, it's not really interesting.. yet
             return false;
         }
 
@@ -47,28 +56,10 @@ public class Field {
             intermediateStats.add(stats);
         }
 
-        //Check if color stats already exists
-        if(!robotStats.containsKey(stats.color)) {
-            robotStats.put(stats.color, new TreeSet<RobotStats>(new RobotStatsComparator()));
-        }
-
-        robotStats.get(stats.color).add(stats);
-
         return true;
     }
 
-    public boolean canMove(Direction direction){
-        switch (direction){
-            case NORTH: return canNorth;
-            case EAST: return canEast;
-            case SOUTH: return canSouth;
-            case WEST: return canWest;
-            default:
-                System.out.println("UNKNOWN DIRECTION GIVEN IN 'Field.canMove(..)'");
-                System.exit(1);
-                return false;
-        }
-    }
+
 
     public boolean hasOtherFinals(Color color){
         return finalIndicators != null && (finalIndicators.contains(color) ? -1 : 0) + finalIndicators.size() > 0;
@@ -78,9 +69,9 @@ public class Field {
         return finalIndicators != null && finalIndicators.contains(color);
     }
 
-    public RobotStats getResult(){
+    public RobotStats getResult(Color goal){
         for(RobotStats stats : finalStats){
-            if(stats.color == goalColor) return stats;
+            if(stats.color == goal) return stats;
         }
 
         return null;
@@ -111,12 +102,14 @@ public class Field {
         if(intermediateStats == null) return false;
 
         //For each intermediate element in the field
-        for(RobotStats stats : intermediateStats){
+        for(Iterator<RobotStats> it = intermediateStats.iterator(); it.hasNext();){
+            RobotStats stats = it.next();
+
             if(stats.color != robot.color && stats.direction == direction){
                 //Correct direction and the right color
                 stats.moves += robot.moves;
                 stats.isFinal = true;
-                intermediateStats.remove(stats);
+                it.remove();
                 finalIndicators.add(stats.color);
                 finalStats.add(stats);
                 //TODO: Should bubbled down fields also update adjacent fields?

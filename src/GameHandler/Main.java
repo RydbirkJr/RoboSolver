@@ -1,3 +1,5 @@
+package GameHandler;
+
 /**
  * Created by Anders on 05/08/15.
  */
