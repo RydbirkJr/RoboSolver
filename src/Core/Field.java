@@ -19,7 +19,6 @@ public class Field {
         this.col = col;
     }
 
-    //This is not applicable for the field - it's not a part of the gameboard but the solution
     public boolean canMove(Direction direction){
         switch (direction){
             case NORTH: return canNorth;

@@ -2,30 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6f611e1-7cec-460f-b838-6f6435644e2a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/RoboSolver/DataWrapper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/RoboSolver/FieldData.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Core/Game.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/BasicSolver/GameState.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Core/IGameSolver.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/RoboSolver/MoveStats.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Core/WinningMove.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Game.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/RobotComparator.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Color.java" afterPath="$PROJECT_DIR$/src/Core/Color.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Direction.java" afterPath="$PROJECT_DIR$/src/Core/Direction.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Field.java" afterPath="$PROJECT_DIR$/src/Core/Field.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/GameBoard.java" afterPath="$PROJECT_DIR$/src/Core/GameBoard.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/GameHandler.java" afterPath="$PROJECT_DIR$/src/GameHandler/GameHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/GameResult.java" afterPath="$PROJECT_DIR$/src/Core/GameResult.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Goal.java" afterPath="$PROJECT_DIR$/src/Core/Goal.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Main.java" afterPath="$PROJECT_DIR$/src/GameHandler/Main.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/MapHandler.java" afterPath="$PROJECT_DIR$/src/GameHandler/MapHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Obstacle.java" afterPath="$PROJECT_DIR$/src/Core/Obstacle.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/RoboSolver.java" afterPath="$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Robot.java" afterPath="$PROJECT_DIR$/src/Core/Robot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/RobotStats.java" afterPath="$PROJECT_DIR$/src/RoboSolver/RobotStats.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/RobotStatsComparator.java" afterPath="$PROJECT_DIR$/src/RoboSolver/RobotStatsComparator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/BasicSolver/BasicField.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/BasicSolver/RobotState.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java" afterPath="$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Core/Field.java" afterPath="$PROJECT_DIR$/src/Core/Field.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/GameHandler/GameHandler.java" afterPath="$PROJECT_DIR$/src/GameHandler/GameHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/BasicSolver/GameState.java" afterPath="$PROJECT_DIR$/src/BasicSolver/GameState.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java" afterPath="$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="RicochetRobots.iws" />
@@ -52,11 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="GameHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/GameHandler/GameHandler.java">
+      <file leaf-file-name="BasicSolverHandler.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
-              <caret line="73" column="2" selection-start-line="73" selection-start-column="2" selection-end-line="73" selection-end-column="2" />
+            <state vertical-scroll-proportion="0.22094926" vertical-offset="0" max-vertical-offset="2235">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -67,8 +50,8 @@
       <file leaf-file-name="RoboSolverHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="3720">
-              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="3705">
+              <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -76,33 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BasicSolverHandler.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java">
+      <file leaf-file-name="Field.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Core/Field.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
-              <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GameState.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/BasicSolver/GameState.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.14729951" vertical-offset="0" max-vertical-offset="611">
-              <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FieldData.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/RoboSolver/FieldData.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1291" max-vertical-offset="1875">
-              <caret line="110" column="28" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="19" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -113,7 +74,7 @@
       <file leaf-file-name="DataWrapper.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/RoboSolver/DataWrapper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="915">
+            <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="915">
               <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -126,7 +87,7 @@
       <file leaf-file-name="MapHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/GameHandler/MapHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="2175">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2175">
               <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -134,28 +95,6 @@
                 <element signature="e#1550#1560#0" expanded="true" />
                 <element signature="e#2800#2810#0" expanded="true" />
                 <element signature="e#3966#3972#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Goal.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Core/Goal.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="330">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Field.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Core/Field.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
-              <caret line="33" column="5" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -193,19 +132,21 @@
         <option value="$PROJECT_DIR$/src/Core/Game.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/FieldWrapper.java" />
         <option value="$PROJECT_DIR$/src/Core/GameBoard.java" />
-        <option value="$PROJECT_DIR$/src/Core/Field.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/MoveStats.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/RobotStats.java" />
         <option value="$PROJECT_DIR$/src/Core/GameResult.java" />
         <option value="$PROJECT_DIR$/src/Core/WinningMove.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/DataWrapper.java" />
-        <option value="$PROJECT_DIR$/src/GameHandler/GameHandler.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/RobotComparator.java" />
         <option value="$PROJECT_DIR$/src/GameHandler/MapHandler.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/FieldData.java" />
+        <option value="$PROJECT_DIR$/src/Core/Field.java" />
+        <option value="$PROJECT_DIR$/src/BasicSolver/BasicField.java" />
         <option value="$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java" />
-        <option value="$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java" />
+        <option value="$PROJECT_DIR$/src/BasicSolver/RobotState.java" />
+        <option value="$PROJECT_DIR$/src/GameHandler/GameHandler.java" />
         <option value="$PROJECT_DIR$/src/BasicSolver/GameState.java" />
+        <option value="$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java" />
       </list>
     </option>
   </component>
@@ -718,12 +659,12 @@
       <workItem from="1439535935922" duration="114000" />
       <workItem from="1439536074173" duration="17236000" />
       <workItem from="1440428303510" duration="5732000" />
-      <workItem from="1440662091569" duration="14730000" />
+      <workItem from="1440662091569" duration="20868000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="69293000" />
+    <option name="totallyTimeSpent" value="75431000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="962" extended-state="0" />
@@ -750,8 +691,8 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18333334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26297578" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18333334" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26297578" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -785,13 +726,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/GameHandler/GameHandler.java</url>
-          <line>38</line>
+          <line>39</line>
           <properties />
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/GameHandler/GameHandler.java</url>
-          <line>36</line>
+          <line>37</line>
           <properties />
           <option name="timeStamp" value="31" />
         </line-breakpoint>
@@ -801,8 +742,14 @@
           <properties />
           <option name="timeStamp" value="34" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java</url>
+          <line>35</line>
+          <properties />
+          <option name="timeStamp" value="35" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="35" />
+      <option name="time" value="39" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -811,26 +758,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1409" max-vertical-offset="1995">
-          <caret line="114" column="22" selection-start-line="114" selection-start-column="22" selection-end-line="114" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/Field.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="1425">
-          <caret line="17" column="30" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RicochetRobots.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="100">
@@ -1150,22 +1077,50 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/Field.java">
+    <entry file="file://$PROJECT_DIR$/src/Core/IGameSolver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="615">
-          <caret line="33" column="5" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.16245487" vertical-offset="0" max-vertical-offset="554">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/src.zip!/java/lang/Object.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40589198" vertical-offset="2887" max-vertical-offset="8055">
+          <caret line="234" column="18" selection-start-line="234" selection-start-column="18" selection-end-line="234" selection-end-column="18" />
+          <folding>
+            <element signature="e#10065#10066#0" expanded="false" />
+            <element signature="e#10148#10149#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RoboSolver/FieldData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5826514" vertical-offset="1264" max-vertical-offset="1875">
+          <caret line="110" column="28" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/GameHandler/GameHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/BasicSolver/BasicField.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1395">
-          <caret line="73" column="2" selection-start-line="73" selection-start-column="2" selection-end-line="73" selection-end-column="2" />
+        <state vertical-scroll-proportion="0.2700491" vertical-offset="0" max-vertical-offset="611">
+          <caret line="11" column="36" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RoboSolver/DataWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="915">
+          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#1058#1071#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1184,49 +1139,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/RoboSolver/DataWrapper.java">
+    <entry file="file://$PROJECT_DIR$/src/Core/Field.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="193" max-vertical-offset="915">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1058#1071#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RoboSolver/FieldData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1291" max-vertical-offset="1875">
-          <caret line="110" column="28" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="19" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/BasicSolver/RobotState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="240" max-vertical-offset="3720">
-          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Core/IGameSolver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16245487" vertical-offset="0" max-vertical-offset="554">
-          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.29459903" vertical-offset="0" max-vertical-offset="375">
+          <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/GameHandler/GameHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="360">
-          <caret line="12" column="19" selection-start-line="12" selection-start-column="19" selection-end-line="12" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.6373874" vertical-offset="377" max-vertical-offset="1410">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1235,9 +1169,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/BasicSolver/GameState.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14729951" vertical-offset="0" max-vertical-offset="611">
-          <caret line="6" column="4" selection-start-line="6" selection-start-column="4" selection-end-line="6" selection-end-column="4" />
-          <folding />
+        <state vertical-scroll-proportion="0.5754923" vertical-offset="247" max-vertical-offset="750">
+          <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/RoboSolver/RoboSolverHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="315" max-vertical-offset="3705">
+          <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/BasicSolver/BasicSolverHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22094926" vertical-offset="0" max-vertical-offset="2235">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

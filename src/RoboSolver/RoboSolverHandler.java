@@ -14,7 +14,6 @@ public class RoboSolverHandler implements IGameSolver {
     private FieldData goalFieldData;
     private PriorityQueue<RobotStats> robotQueue;
     private Queue<MoveStats> moveQueue;
-    private RobotStats result;
     private DataWrapper wrapper;
     private Direction[] directions;
 

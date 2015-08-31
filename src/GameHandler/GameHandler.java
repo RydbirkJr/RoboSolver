@@ -1,5 +1,6 @@
 package GameHandler;
 
+import BasicSolver.BasicSolverHandler;
 import Core.*;
 import RoboSolver.RoboSolverHandler;
 import org.springframework.util.StopWatch;
@@ -32,7 +33,7 @@ public class GameHandler {
         for(Goal goal : gameBoard.goals){
             String goalString = "Core.Goal: " + formatOutput(goal.color, goal.row, goal.col);
             watch.start(goalString);
-            RoboSolverHandler solver = new RoboSolverHandler();
+            IGameSolver solver = new BasicSolverHandler();
             GameResult roboResult = solver.solveGame(new Game(gameBoard.fields,robots,goal));
             watch.stop();
             System.out.println("Result: " + goalString);
