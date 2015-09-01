@@ -1,4 +1,4 @@
-package BasicSolver;
+package basic;
 
 import Core.Color;
 

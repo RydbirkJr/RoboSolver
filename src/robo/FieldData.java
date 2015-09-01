@@ -1,4 +1,4 @@
-package RoboSolver;
+package robo;
 
 import Core.Color;
 import Core.Direction;

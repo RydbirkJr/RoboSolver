@@ -1,7 +1,4 @@
 package Core;
-import RoboSolver.RobotStats;
-
-import java.util.*;
 
 /**
  * Created by Anders on 05/08/15.

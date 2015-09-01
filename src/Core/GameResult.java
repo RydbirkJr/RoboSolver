@@ -1,7 +1,5 @@
 package Core;
 
-import RoboSolver.RobotStats;
-
 import java.util.ArrayList;
 
 /**

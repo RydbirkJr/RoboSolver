@@ -1,6 +1,4 @@
-package RoboSolver;
-
-import RoboSolver.RobotStats;
+package robo;
 
 import java.util.Comparator;
 

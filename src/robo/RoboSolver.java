@@ -1,4 +1,4 @@
-package RoboSolver;
+package robo;
 
 import Core.*;
 
@@ -9,7 +9,7 @@ import java.util.Queue;
 /**
  * Created by Anders on 07/08/15.
  */
-public class RoboSolverHandler implements IGameSolver {
+public class RoboSolver implements IGameSolver {
     private Game game;
     private FieldData goalFieldData;
     private PriorityQueue<RobotStats> robotQueue;

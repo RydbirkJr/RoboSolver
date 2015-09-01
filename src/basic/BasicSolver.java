@@ -1,14 +1,17 @@
-package BasicSolver;
+package basic;
 
 import Core.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
  * Created by Anders on 31/08/15.
  */
-public class BasicSolverHandler implements IGameSolver {
+public class BasicSolver implements IGameSolver {
     private HashSet<String> states;
     private LinkedList<GameState> gameQueue;
     private BasicField[][] fields;
@@ -31,9 +34,7 @@ public class BasicSolverHandler implements IGameSolver {
             moveInAllDirections(state);
 
             if(goalReached){
-                //DONE
-                System.out.println(result.moves);
-                return null;
+                return getResult();
             }
 
             //Remove robots from board
@@ -59,7 +60,7 @@ public class BasicSolverHandler implements IGameSolver {
         int row = robotState.row;
         int col = robotState.col;
 
-        BasicField field = null;
+        BasicField field;
         BasicField nextField = fields[row][col];
 
         do{
@@ -80,10 +81,12 @@ public class BasicSolverHandler implements IGameSolver {
                     break;
             }
 
+            //Must be applied before assigning next field in case it's off the board. Throws exception
             if (!field.canMove(direction)) {
                 break;
             }
 
+            //Set next for looping
             nextField = fields[row][col];
 
         } while(!nextField.hasRobot);
@@ -139,5 +142,57 @@ public class BasicSolverHandler implements IGameSolver {
 
         states.add(initState.toString());
         gameQueue.add(initState);
+    }
+
+    private GameResult getResult(){
+        //Use the global variable result
+
+        GameState current = result;
+        GameState prev;
+
+        RobotState curRobot;
+        RobotState prevRobot;
+
+        ArrayList<WinningMove> moves = new ArrayList<WinningMove>();
+
+        do{
+            //Get previous state
+            prev = current.prevState;
+
+            //Get robots
+            curRobot = current.robots.get(current.lastMoved);
+            prevRobot = prev.robots.get(current.lastMoved);
+
+            //Get diff between robots
+            moves.add(getWinningMove(curRobot, prevRobot, current.moves));
+
+            //Set current to prev
+            current = prev;
+
+        } while (current.moves != 0);
+
+        Collections.reverse(moves);
+
+        return new GameResult(moves, result.moves);
+    }
+
+    private WinningMove getWinningMove(RobotState cur, RobotState prev, int moves){
+
+        Direction dir = null;
+
+        //NOT PRETTY...
+        if(cur.row < prev.row){
+            dir = Direction.SOUTH;
+        } else if(cur.row > prev.row){
+            dir = Direction.NORTH;
+        } else {
+            if(cur.col < prev.col){
+                dir = Direction.WEST;
+            } else {
+                dir = Direction.EAST;
+            }
+        }
+
+        return new WinningMove(dir, cur.color, cur.row, cur.col, moves);
     }
 }

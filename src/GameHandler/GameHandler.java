@@ -1,46 +1,70 @@
 package GameHandler;
 
-import BasicSolver.BasicSolverHandler;
+import basic.BasicSolver;
 import Core.*;
-import RoboSolver.RoboSolverHandler;
 import org.springframework.util.StopWatch;
+import robo.RoboSolver;
 
 /**
  * Created by Anders on 07/08/15.
  */
 public class GameHandler {
 
+    private GameBoard gameBoard;
+    private MapHandler mapHandler;
+    private Robot[] robots;
+
+    public GameHandler(){
+        //Setup the map
+        mapHandler = new MapHandler();
+        gameBoard = mapHandler.setupGameBoard();
+        robots = mapHandler.getRobotPositions(gameBoard);
+    }
+
     /**
      * Initializing function, setups all the game bounds.
      */
     public void init(){
-        //Setup the map
-        MapHandler mapHandler = new MapHandler();
-        GameBoard gameBoard = mapHandler.setupGameBoard();
 
-        //Get robot positions
-        Robot[] robots = mapHandler.getRobotPositions(gameBoard);
+        printRobots();
 
-        //Print robot positions
-        for(Robot robot : robots){
-            String output = formatOutput(robot.color, robot.startField.row, robot.startField.col);
-            System.out.println(output);
-        }
-        System.out.println();
+
+        //Start monitoring stop watch
+        StopWatch watch = new StopWatch();
 
         //For each goal, loop through solution
-        StopWatch watch = new StopWatch();
         for(Goal goal : gameBoard.goals){
-            String goalString = "Core.Goal: " + formatOutput(goal.color, goal.row, goal.col);
-            watch.start(goalString);
-            IGameSolver solver = new BasicSolverHandler();
-            GameResult roboResult = solver.solveGame(new Game(gameBoard.fields,robots,goal));
-            watch.stop();
-            System.out.println("Result: " + goalString);
-            printResult(roboResult);
+
+            String goalString = "Goal: " + formatOutput(goal.color, goal.row, goal.col);
+            System.out.println(goalString);
+            Game game = new Game(gameBoard.fields,robots,goal);
+
+            {
+                watch.start(goalString);
+                runGame(game, new RoboSolver(), "Robo");
+                watch.stop();
+
+            }
+
+            {
+                watch.start(goalString);
+                runGame(game, new BasicSolver(), "Basic");
+                watch.stop();
+            }
+
+            System.out.println("----");
+
+
         }
         System.out.println(watch.prettyPrint());
         System.out.println("Terminated");
+    }
+
+    private void runGame(Game game, IGameSolver solver, String prefix){
+        GameResult result = solver.solveGame(game);
+
+        System.out.println("Result: "+ prefix + " " + result.moveCount);
+        printResult(result);
     }
 
     private String formatOutput(Color color, int row, int col){
@@ -56,6 +80,15 @@ public class GameHandler {
             output += move.direction.name().substring(0,1);
             System.out.println(output);
         }
+    }
+
+    private void printRobots(){
+        //Print robot positions
+        for(Robot robot : robots){
+            String output = formatOutput(robot.color, robot.startField.row, robot.startField.col);
+            System.out.println(output);
+        }
+        System.out.println();
     }
 
 //    private void printBoard(Game game){
