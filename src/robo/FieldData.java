@@ -1,8 +1,8 @@
 package robo;
 
-import Core.Color;
-import Core.Direction;
-import Core.Field;
+import core.Color;
+import core.Direction;
+import core.Field;
 
 import java.util.*;
 

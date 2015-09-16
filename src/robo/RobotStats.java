@@ -1,5 +1,5 @@
 package robo;
-import Core.*;
+import core.*;
 
 /**
  * Created by Anders on 05/08/15.

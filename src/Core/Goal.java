@@ -1,6 +1,4 @@
-package Core;
-
-import Core.Field;
+package core;
 
 /**
  * Created by Anders on 07/08/15.

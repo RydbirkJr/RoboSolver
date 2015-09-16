@@ -1,7 +1,6 @@
 package basic;
 
-import Core.Color;
-import Core.WinningMove;
+import core.Color;
 
 import java.util.HashMap;
 

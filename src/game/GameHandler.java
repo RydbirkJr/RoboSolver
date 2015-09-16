@@ -1,7 +1,8 @@
-package GameHandler;
+package game;
 
 import basic.BasicSolver;
-import Core.*;
+import core.*;
+import graph.GraphSolver;
 import org.springframework.util.StopWatch;
 import robo.RoboSolver;
 
@@ -51,6 +52,13 @@ public class GameHandler {
                 runGame(game, new BasicSolver(), "Basic");
                 watch.stop();
             }
+            try {
+                watch.start(goalString);
+                runGame(game, new GraphSolver(), "Graph");
+                watch.stop();
+            } catch (Exception e) {
+                watch.stop();
+            }
 
             System.out.println("----");
 
@@ -90,32 +98,4 @@ public class GameHandler {
         }
         System.out.println();
     }
-
-//    private void printBoard(Game game){
-//        for (int row = 0; row < 16; row++){
-//            for(int col = 0; col < 16; col++){
-//                Field field = game.gameBoard.fields[row][col];
-//
-//                String output = "";
-//
-//                if(!field.canWest) output += "|";
-//                if(!field.canNorth) output += "^";
-//                if(field.isGoalField) output += "G:" + field.goalColor.name();
-//                //if(field.robotStats != null) output += "R:" + field.robotStats.entrySet().iterator().next().getValue().first().color.name();
-//                output +=field.row + ":" + field.col;
-//                if(!field.canSouth) output += "_";
-//                if(!field.canEast) output += "|";
-//
-//                System.out.print(output + "\t\t<>");
-//            }
-//            System.out.println();
-//        }
-//
-////        for(Core.Field field : game.robots){
-////            System.out.println(field.robotStats.entrySet().iterator().next().getValue().first().color.name() + ", " + field.row + ":" + field.col);
-////        }
-//
-//    }
-
-
 }

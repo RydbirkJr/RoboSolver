@@ -1,6 +1,6 @@
 package robo;
 
-import Core.Direction;
+import core.Direction;
 
 /**
  * Created by Anders on 27/08/15.

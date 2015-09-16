@@ -1,4 +1,4 @@
-package GameHandler;
+package game;
 
 /**
  * Created by Anders on 05/08/15.

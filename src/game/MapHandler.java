@@ -1,8 +1,7 @@
-package GameHandler;
+package game;
 
-import Core.*;
+import core.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -124,7 +123,7 @@ public class MapHandler {
         goals.add(new Goal(3,6,Color.BLUE));
         goals.add(new Goal(3,9,Color.BLUE));
         goals.add(new Goal(4,14,Color.GREEN));
-        goals.add(new Goal(5,5,Color.RED));
+        goals.add(new Goal(5,4,Color.RED));
         goals.add(new Goal(5,10,Color.YELLOW));
         goals.add(new Goal(6,1,Color.GREEN));
         goals.add(new Goal(9,3,Color.YELLOW));

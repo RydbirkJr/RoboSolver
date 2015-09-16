@@ -1,9 +1,9 @@
 package robo;
 
-import Core.Direction;
-import Core.Field;
-import Core.GameResult;
-import Core.WinningMove;
+import core.Direction;
+import core.Field;
+import core.GameResult;
+import core.WinningMove;
 import java.util.ArrayList;
 import java.util.Collections;
 

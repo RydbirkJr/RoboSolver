@@ -1,8 +1,7 @@
 package basic;
 
-import Core.*;
+import core.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -47,11 +46,15 @@ public class BasicSolver implements IGameSolver {
         for(RobotState robot : oldState.robots.values()){
             for(Direction dir : directions){
                 GameState newState = moveDirection(dir, oldState, robot);
-                String stateShort = newState.toString();
-                if(!states.contains(stateShort)){
-                    states.add(stateShort);
-                    gameQueue.add(newState);
+
+                if (newState != null) {
+                    String stateShort = newState.toString();
+                    if(!states.contains(stateShort)){
+                        states.add(stateShort);
+                        gameQueue.add(newState);
+                    }
                 }
+
             }
         }
     }
@@ -65,6 +68,11 @@ public class BasicSolver implements IGameSolver {
 
         do{
             field = nextField;
+
+            //Must be applied before assigning next field in case it's off the board. Throws exception
+            if (!field.canMove(direction)) {
+                break;
+            }
 
             switch (direction){
                 case NORTH:
@@ -81,15 +89,12 @@ public class BasicSolver implements IGameSolver {
                     break;
             }
 
-            //Must be applied before assigning next field in case it's off the board. Throws exception
-            if (!field.canMove(direction)) {
-                break;
-            }
-
             //Set next for looping
             nextField = fields[row][col];
 
         } while(!nextField.hasRobot);
+
+        if(row == robotState.row && col == robotState.col) return null;
 
         GameState result = new GameState(oldState, new RobotState(robotState.color, field.row, field.col));
 
@@ -125,9 +130,18 @@ public class BasicSolver implements IGameSolver {
     private GameState initRobots(Robot[] robots){
         RobotState[] states = new RobotState[4];
 
-        for(int i = 0; i < robots.length; i++){
-            states[i] = new RobotState(robots[i].color,robots[i].startField.row, robots[i].startField.col);
+        int index = 1;
+        for(Robot robot : robots){
+            RobotState state = new RobotState(robot.color,robot.startField.row, robot.startField.col);
+
+            if(robot.color == game.goal.color){
+                states[0] = state;
+            } else {
+                states[index] = state;
+                index++;
             }
+        }
+
         return new GameState(states,null,0);
     }
 
@@ -182,9 +196,9 @@ public class BasicSolver implements IGameSolver {
 
         //NOT PRETTY...
         if(cur.row < prev.row){
-            dir = Direction.SOUTH;
-        } else if(cur.row > prev.row){
             dir = Direction.NORTH;
+        } else if(cur.row > prev.row){
+            dir = Direction.SOUTH;
         } else {
             if(cur.col < prev.col){
                 dir = Direction.WEST;

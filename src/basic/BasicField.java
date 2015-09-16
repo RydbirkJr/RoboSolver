@@ -1,6 +1,6 @@
 package basic;
 
-import Core.Field;
+import core.Field;
 
 /**
  * Created by Anders on 31/08/15.

@@ -1,6 +1,6 @@
 package basic;
 
-import Core.Color;
+import core.Color;
 
 /**
  * Created by Anders on 31/08/15.

@@ -1,6 +1,6 @@
 package robo;
 
-import Core.*;
+import core.*;
 
 import java.util.LinkedList;
 import java.util.PriorityQueue;
@@ -85,7 +85,8 @@ public class RoboSolver implements IGameSolver {
         if (canMove) {
             FieldData nextField = getNextField(move.fieldData.row, move.fieldData.col, move.direction);
 
-            if (nextField.starter != null) {
+            if (nextField.starter != null && nextField.starter.color != move.origin.color) {
+
                 //Require robot move
                 reqRobotMove = true;
                 isFinal = true;
