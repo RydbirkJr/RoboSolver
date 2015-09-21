@@ -29,7 +29,6 @@ public class GameHandler {
 
         printRobots();
 
-
         //Start monitoring stop watch
         StopWatch watch = new StopWatch();
 
@@ -57,6 +56,7 @@ public class GameHandler {
                 runGame(game, new GraphSolver(), "Graph");
                 watch.stop();
             } catch (Exception e) {
+                //e.printStackTrace();
                 watch.stop();
             }
 
