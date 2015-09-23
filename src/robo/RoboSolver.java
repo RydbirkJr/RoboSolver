@@ -16,6 +16,7 @@ public class RoboSolver implements IGameSolver {
     private Queue<MoveStats> moveQueue;
     private DataWrapper wrapper;
     private Direction[] directions;
+    private
 
     public GameResult solveGame(Game game){
         this.game = game;
@@ -34,7 +35,7 @@ public class RoboSolver implements IGameSolver {
                 RobotStats finalStats = goalFieldData.getResult(game.goal.color);
 
                 //If the result is above the current level, continue
-                if(finalStats.moves <= (robot.moves +1)){
+                if(finalStats.moves <= (robot.moves +2)){
                     return wrapper.formatResult(finalStats);
                 }
             }

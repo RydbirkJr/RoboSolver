@@ -1,7 +1,6 @@
 package graph;
 
 import core.Color;
-import core.Robot;
 
 import java.util.HashMap;
 
@@ -13,6 +12,7 @@ public class GameState {
     int moves;
     GameState prev;
     HashMap<Color, RobotState> states;
+    Color colorChanged;
 
     public GameState(RobotState[] states){
         moves = 0;
@@ -28,6 +28,7 @@ public class GameState {
         this.states = (HashMap<Color, RobotState>) prev.states.clone();
         this.states.put(newState.color, newState);
         this.moves = prev.moves + 1;
+        this.colorChanged = newState.color;
     }
 
     @Override

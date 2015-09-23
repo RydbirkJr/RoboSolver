@@ -15,7 +15,6 @@ public class GraphSolver implements IGameSolver {
     private Queue<GameState> queue;
     private int bestResult = Integer.MAX_VALUE;
     private HashSet<String> existingStates;
-    private GameState bestState;
 
     public GraphSolver(){
     }
@@ -28,6 +27,8 @@ public class GraphSolver implements IGameSolver {
         this.existingStates = new HashSet<String>();
         this.goal = game.goal;
 
+        GameState bestState = null;
+        BfsNode bestBfs = null;
 
         GameState gameState = getInitialState(game.robots, game.goal.color);
         existingStates.add(gameState.toString());
@@ -54,6 +55,7 @@ public class GraphSolver implements IGameSolver {
                 if(res < bestResult) {
                     bestResult = res;
                     bestState = gameState;
+                    bestBfs = result;
                 }
             }
 
@@ -65,7 +67,7 @@ public class GraphSolver implements IGameSolver {
             for(RobotState robot : gameState.states.values()){
 
                 for(Edge edge : graph[robot.row][robot.col].edges){
-                    GameState temp = new GameState(gameState, new RobotState(robot.color, robot.moves + 1, edge.child.row, edge.child.col));
+                    GameState temp = new GameState(gameState, new RobotState(robot.color, robot.moves + 1, edge.child.row, edge.child.col, edge.direction));
 
                     //If state already exists, continue
                     String lookup = temp.toString();
@@ -87,9 +89,7 @@ public class GraphSolver implements IGameSolver {
             }
             removeRobot(graph, fields, robotRow, robotCol);
         }
-
-        System.out.println("Graph: " + bestResult);
-        return null;
+        return getResult(bestState, bestBfs);
     }
 
     public Vertex[][] buildGraph(Field[][] fields){
@@ -379,7 +379,7 @@ public class GraphSolver implements IGameSolver {
 
     private BfsNode applyBfsSearch(Vertex root){
         BfsNode[][] result = new BfsNode[16][16];
-        BfsNode rootNode = new BfsNode(0, null, root);
+        BfsNode rootNode = new BfsNode(0, null, root, Direction.NONE);
 
         result[root.row][root.col] = rootNode;
 
@@ -393,7 +393,7 @@ public class GraphSolver implements IGameSolver {
                 Vertex vertex = edge.child;
                 BfsNode temp = result[vertex.row][vertex.col];
                 if(temp == null){
-                    temp = new BfsNode(node.distance+1,node, vertex);
+                    temp = new BfsNode(node.distance+1,node, vertex, edge.direction);
                     result[vertex.row][vertex.col] = temp;
                     queue.add(temp);
                 }
@@ -415,10 +415,36 @@ public class GraphSolver implements IGameSolver {
                 continue;
             }
 
-            initStates[i] = new RobotState(robot.color, 0, robot.startField.row, robot.startField.col);
+            initStates[i] = new RobotState(robot.color, 0, robot.startField.row, robot.startField.col, Direction.NONE);
             i++;
         }
 
         return new GameState(initStates);
+    }
+
+    private GameResult getResult(GameState result, BfsNode bfsNode){
+        int distance = result.moves + bfsNode.distance;
+
+        ArrayList<WinningMove> moves = new ArrayList<WinningMove>();
+
+        int counter = 0;
+        while(bfsNode.distance > 0){
+            moves.add(new WinningMove(bfsNode.direction, goal.color,bfsNode.vertex.row, bfsNode.vertex.col,distance - counter));
+            counter++;
+            bfsNode = bfsNode.parent;
+        }
+
+        while(result.moves > 0){
+            RobotState robot = result.states.get(result.colorChanged);
+
+            moves.add(new WinningMove(robot.dir, robot.color, robot.row, robot.col, distance - counter));
+
+            counter++;
+            result = result.prev;
+        }
+
+        Collections.reverse(moves);
+
+        return new GameResult(moves, distance);
     }
 }
