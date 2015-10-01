@@ -1,13 +1,14 @@
-package graph;
+package graph_v2;
 
 import core.*;
+import minimum_moves.MinimumMoves;
 
 import java.util.*;
 
 /**
  * Created by Anders on 07/09/15.
  */
-public class GraphSolver implements IGameSolver {
+public class GraphSolver_v2 implements IGameSolver {
     private Vertex[][] graph;
     private Field[][] fields;
     private int robotRow, robotCol; //Goal robot robotRow robotCol
@@ -16,7 +17,7 @@ public class GraphSolver implements IGameSolver {
     private int bestResult = Integer.MAX_VALUE;
     private HashSet<String> existingStates;
 
-    public GraphSolver(){
+    public GraphSolver_v2(){
     }
 
     @Override
@@ -26,6 +27,21 @@ public class GraphSolver implements IGameSolver {
         this.queue = new LinkedList<GameState>();
         this.existingStates = new HashSet<String>();
         this.goal = game.goal;
+
+        Robot[] OR = new Robot[3];
+        Robot GR = null;
+
+        int i = 0;
+        for(Robot robot : game.robots){
+            if(robot.color == game.goal.color){
+                GR = robot;
+            } else {
+                OR[i] = robot;
+                i++;
+            }
+        }
+
+        int[][] minMoves = MinimumMoves.minimumMoves(this.fields, game.goal);
 
         GameState bestState = null;
         BfsNode bestBfs = null;
@@ -39,7 +55,7 @@ public class GraphSolver implements IGameSolver {
             //get element
             gameState = queue.poll();
 
-            if( bestResult < (gameState.moves + 2) ){
+            if( bestResult <= (gameState.moves + minMoves[GR.startField.row][GR.startField.col]) ){
                 //satisfied the search
                 break;
             }
@@ -48,7 +64,7 @@ public class GraphSolver implements IGameSolver {
                 this.placeRobot(graph, fields, robot.row, robot.col);
             }
 
-            BfsNode result = applyBfsSearch(graph[robotRow][robotCol]);
+            BfsNode result = applyBfsSearch(graph[robotRow][robotCol], bestResult - gameState.moves, minMoves);
 
             if(result != null){
                 int res = result.distance + gameState.moves;
@@ -363,7 +379,7 @@ public class GraphSolver implements IGameSolver {
     }
 
 
-    private BfsNode applyBfsSearch(Vertex root){
+    private BfsNode applyBfsSearch(Vertex root, int max, int[][] minMoves){
         BfsNode[][] result = new BfsNode[16][16];
         BfsNode rootNode = new BfsNode(0, null, root, Direction.NONE);
 
@@ -373,8 +389,16 @@ public class GraphSolver implements IGameSolver {
 
         queue.add(rootNode);
 
+        //int count = 0;
         while (!queue.isEmpty()){
+            //count++;
             BfsNode node = queue.poll();
+
+            //Since every node is investigated in incremental manner
+            //If max is reached, the bfs is not relevant
+            if(node.distance == max) break;
+            if((minMoves[node.vertex.row][node.vertex.col] + node.distance) >= max) continue;
+
             for(Edge edge : node.vertex.edges){
                 Vertex vertex = edge.child;
                 BfsNode temp = result[vertex.row][vertex.col];
@@ -385,6 +409,7 @@ public class GraphSolver implements IGameSolver {
                 }
             }
         }
+
         return result[goal.row][goal.col];
     }
 

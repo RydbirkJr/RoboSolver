@@ -1,0 +1,55 @@
+\section{Introduction}\label{introduction}
+
+\subsection{Ricochet Robots}\label{ricochet-robots}
+
+Beskrivelse af spillet - Bevæger sig som rooks i skak\\
+- Din mor
+
+Test - test
+
+\subsection{Goals}\label{goals}
+
+\subsection{Previous Solutions}\label{previous-solutions}
+
+\subsection{Baseline}\label{baseline}
+
+Et navn for mål-robotten Et navn for ikke-mål-robotterne
+
+\section{Solutions}\label{solutions}
+
+\subsection{JPS+}\label{jps}
+
+\subsubsection{Algorithm}\label{algorithm}
+
+\subsubsection{Analysis}\label{analysis}
+
+\subsection{Graph-DP}\label{graph-dp}
+
+\subsubsection{Algorithm}\label{algorithm-1}
+
+The base idea of the graph based algorithm is to construct a graph for
+the entire board with directional edges for each vertex and represent
+this in a two dimensional array. Constructing the graph is done in two
+passes with dynamic programming.
+
+PSEUDO-kode?
+
+A basic assumption in this solution is that all moves by the Obstacle
+Robots, OR, can be applied before the actual Goal Robot, GR, moves
+towards goal. Thus, the GR can be dependent on OR while OR can depend
+all other OR states but only on GR's starting position.
+
+Afterwards, the solution will move the OR in all possible directions,
+evaluating the search tree with a branching factor of \(9^n\) where n is
+the
+
+A heuristic function is used to evaluate the current best solution
+compared to the
+
+\subsubsection{Analysis}\label{analysis-1}
+
+\section{Experimental results}\label{experimental-results}
+
+\subsection{Setup}\label{setup}
+
+\subsection{Results}\label{results}

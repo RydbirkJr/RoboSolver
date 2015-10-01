@@ -1,4 +1,4 @@
-package graph;
+package graph_v2;
 
 import core.*;
 import game.MapHandler;
@@ -9,12 +9,12 @@ import java.util.List;
 
 public class GraphSolverTest {
 
-    @org.junit.Test
+    @Test
     public void testBuildGraph() throws Exception {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        Vertex[][] graph = new GraphSolver().buildGraph(board.fields);
+        Vertex[][] graph = new GraphSolver_v2().buildGraph(board.fields);
 
         Assert.isTrue(graph[0][0].edges.size() == 2, "(0,0) has 2 edges.");
 
@@ -49,7 +49,7 @@ public class GraphSolverTest {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        GraphSolver solver = new GraphSolver();
+        GraphSolver_v2 solver = new GraphSolver_v2();
 
         Vertex[][] graph = solver.buildGraph(board.fields);
 
@@ -109,7 +109,7 @@ public class GraphSolverTest {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        GraphSolver solver = new GraphSolver();
+        GraphSolver_v2 solver = new GraphSolver_v2();
 
         Vertex[][] graph = solver.buildGraph(board.fields);
 
@@ -162,9 +162,10 @@ public class GraphSolverTest {
 //        };
 //new Goal[] {new Goal(14,2, Color.GREEN)
         for(Goal goal : board.goals){
-            System.out.println("Goal: " + goal.color.name() + " " + (goal.row + 1) + ":" + (goal.col + 1));
+            System.out.print("Goal: " + goal.color.name() + " " + (goal.row + 1) + ":" + (goal.col + 1));
             Game game = new Game(board.fields, robots, goal);
-            new GraphSolver().solveGame(game);
+            GameResult result = new GraphSolver_v2().solveGame(game);
+            System.out.println("\t" + result.moveCount);
         }
 
     }

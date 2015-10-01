@@ -16,7 +16,6 @@ public class RoboSolver implements IGameSolver {
     private Queue<MoveStats> moveQueue;
     private DataWrapper wrapper;
     private Direction[] directions;
-    private
 
     public GameResult solveGame(Game game){
         this.game = game;
