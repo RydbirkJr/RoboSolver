@@ -20,7 +20,7 @@ public class GameHandler {
     private GameBoard gameBoard;
     private MapHandler mapHandler;
     private Robot[] robots;
-    private int roundMax;
+    private int roundMax = 0;
 
     public GameHandler(){
         //Setup the map
@@ -50,7 +50,7 @@ public class GameHandler {
                 Game game = new Game(gameBoard.fields,robots,goal);
 
 
-                runGame(game, new BasicSolver(), "basic", watch,goalString, true);
+                //runGame(game, new BasicSolver(), "basic", watch,goalString, true);
                 runGame(game, new RoboSolver(), "robo",watch,goalString, false);
                 runGame(game, new GraphSolver(), "graph",watch,goalString, false);
                 runGame(game, new GraphSolver_v2(), "graph-Optimized",watch,goalString, false);
@@ -78,7 +78,7 @@ public class GameHandler {
             if(isBasic){
                 roundMax = result.moveCount;
             }
-            //System.out.println("Result: "+ prefix + " " + result.moveCount);
+            System.out.println("Result: "+ prefix + " " + result.moveCount);
             watch.stop();
         } catch (Exception e){
             watch.stop();
