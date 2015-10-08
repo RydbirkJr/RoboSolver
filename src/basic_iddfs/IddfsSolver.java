@@ -53,6 +53,8 @@ public class IddfsSolver implements IGameSolver {
                              int depth,
                              int[][] minMoves
     ){
+
+
         nodes++;
         int height = maxDepth - depth;
         RobotState goalRobot = state.robots.get(goal.color);
@@ -146,7 +148,7 @@ public class IddfsSolver implements IGameSolver {
 
         } while(!hasRobot[row][col]);
 
-        if(row == robotState.row && col == robotState.col) return null;
+        if(field.row == robotState.row && field.col == robotState.col) return null;
 
         GameState result = new GameState(oldState, new RobotState(robotState.color, field.row, field.col));
 

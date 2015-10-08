@@ -131,7 +131,7 @@ public class MapHandler {
         goals.add(new Goal(11,1,Color.RED));
         goals.add(new Goal(11,9, Color.YELLOW));
         goals.add(new Goal(12,6,Color.BLUE));
-        goals.add(new Goal(12,4,Color.GREEN));
+        goals.add(new Goal(12,14,Color.GREEN));
         goals.add(new Goal(14,2,Color.GREEN));
         goals.add(new Goal(14,13,Color.RED));
 

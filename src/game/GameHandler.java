@@ -43,19 +43,20 @@ public class GameHandler {
             roundWatch.start();
             robots = mapHandler.getRobotPositions(gameBoard);
             //For each goal, loop through solution
+
+            //printRobots(robots);
             for(Goal goal : gameBoard.goals){
 
                 String goalString = "Goal: " + formatOutput(goal.color, goal.row, goal.col);
                 //System.out.println(goalString);
                 Game game = new Game(gameBoard.fields,robots,goal);
 
-
-                //runGame(game, new BasicSolver(), "basic", watch,goalString, true);
+                runGame(game, new BasicSolver(), "basic", watch,goalString, true);
                 runGame(game, new RoboSolver(), "robo",watch,goalString, false);
                 runGame(game, new GraphSolver(), "graph",watch,goalString, false);
                 runGame(game, new GraphSolver_v2(), "graph-Optimized",watch,goalString, false);
                 runGame(game, new IddfsSolver(), "iddfs",watch,goalString, false);
-                System.out.println("----");
+                //System.out.println("----");
                 }
 
             roundWatch.stop();
@@ -78,7 +79,7 @@ public class GameHandler {
             if(isBasic){
                 roundMax = result.moveCount;
             }
-            System.out.println("Result: "+ prefix + " " + result.moveCount);
+            //System.out.println("Result: "+ prefix + " " + result.moveCount);
             watch.stop();
         } catch (Exception e){
             watch.stop();
@@ -113,7 +114,7 @@ public class GameHandler {
         }
     }
 
-    private void printRobots(){
+    private void printRobots(Robot[] robots){
         //Print robot positions
         for(Robot robot : robots){
             String output = formatOutput(robot.color, robot.startField.row, robot.startField.col);
