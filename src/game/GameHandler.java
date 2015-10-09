@@ -5,27 +5,26 @@ import basic_iddfs.IddfsSolver;
 import core.*;
 import graph.GraphSolver;
 import graph_v2.GraphSolver_v2;
-import javafx.scene.paint.Stop;
 import org.springframework.util.StopWatch;
 import robo.RoboSolver;
 
 import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.util.concurrent.*;
 
 /**
  * Created by Anders on 07/08/15.
  */
 public class GameHandler {
 
-    private GameBoard gameBoard;
-    private MapHandler mapHandler;
-    private Robot[] robots;
-    private int roundMax = 0;
+    private GameBoard _gameBoard;
+    private MapHandler _mapHandler;
+    private int _minRounds = 0;
+    private boolean test = false;
 
     public GameHandler(){
         //Setup the map
-        mapHandler = new MapHandler();
-        gameBoard = mapHandler.setupGameBoard();
+        _mapHandler = new MapHandler();
+        _gameBoard = _mapHandler.setupGameBoard();
     }
 
     /**
@@ -36,67 +35,91 @@ public class GameHandler {
         //printRobots();
 
         //Start monitoring stop watch
-        StopWatch watch = new StopWatch();
-        StopWatch roundWatch = new StopWatch();
+
 
         for(int i = 0; i < 100; i++){
+            StopWatch roundWatch = new StopWatch();
             roundWatch.start();
-            robots = mapHandler.getRobotPositions(gameBoard);
-            //For each goal, loop through solution
+            Robot[] robots = _mapHandler.getRobotPositions(_gameBoard);
 
-            //printRobots(robots);
-            for(Goal goal : gameBoard.goals){
+                //Generate a robot string representing the game
+                String robotPositions = concatRobots(robots);
+                //For each goal, loop through solution
+                for(Goal goal : _gameBoard.goals){
 
-                String goalString = "Goal: " + formatOutput(goal.color, goal.row, goal.col);
-                //System.out.println(goalString);
-                Game game = new Game(gameBoard.fields,robots,goal);
-
-                runGame(game, new BasicSolver(), "basic", watch,goalString, true);
-                runGame(game, new RoboSolver(), "robo",watch,goalString, false);
-                runGame(game, new GraphSolver(), "graph",watch,goalString, false);
-                runGame(game, new GraphSolver_v2(), "graph-Optimized",watch,goalString, false);
-                runGame(game, new IddfsSolver(), "iddfs",watch,goalString, false);
-                //System.out.println("----");
+                    String gameID = robotPositions + "GOAL="  + goal.color.name().charAt(0) + goal.row + ":" + goal.col;
+                    Game game = new Game(_gameBoard.fields,robots,goal);
+                    //System.out.println(gameID);
+                    {
+                        runGame(game, new BasicSolver(), "basic",gameID, true);
+                    }
+                    {
+                        runGame(game, new IddfsSolver(), "iddfs", gameID, false);
+                    }
+                    {
+                        runGame(game, new RoboSolver(), "robo", gameID, false);
+                    }
+                    {
+                        runGame(game, new GraphSolver(), "graph", gameID, false);
+                    }
+                    {
+                        runGame(game, new GraphSolver_v2(), "graph-Optimized", gameID, false);
+                    }
                 }
 
-            roundWatch.stop();
-            System.out.println("Round: " + i + "\tTime: " + roundWatch.getLastTaskTimeMillis() + " ms");
-
-            //System.out.println(watch.prettyPrint());
-
-
-            }
+                roundWatch.stop();
+                System.out.println("Round: " + i + "\tTime: " + roundWatch.getLastTaskTimeMillis() + " ms");
+        }
         System.out.println("Terminated");
 
-        }
+    }
 
-    private void runGame(Game game, IGameSolver solver, String prefix, StopWatch watch, String goalString, boolean isBasic){
+    private void runGame(Game game, IGameSolver solver, String prefix, String gameID, boolean isBasic){
 
-        GameResult result = null;
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         try{
-            watch.start(goalString + " " + prefix);
-            result = solver.solveGame(game);
-            if(isBasic){
-                roundMax = result.moveCount;
-            }
-            //System.out.println("Result: "+ prefix + " " + result.moveCount);
-            watch.stop();
-        } catch (Exception e){
-            watch.stop();
-        }
+            SolverWrapper wrapper = new SolverWrapper(solver, game, prefix, gameID);
+            executor.submit(wrapper).get(40, TimeUnit.SECONDS);
 
-        FileWriter out = null;
+
+            GameResult res = wrapper.getResult();
+            long timeSpend = wrapper.getTime();
+
+            if(isBasic){
+                _minRounds = res.moveCount;
+            }
+
+            saveToFile(prefix, gameID, res.moveCount, timeSpend);
+            //System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount);
+
+        }catch(TimeoutException e){
+            System.out.println("Timeout for " + prefix);
+            executor.shutdownNow();
+        } catch(InterruptedException e){
+            System.out.println("Interrupted for " + prefix);
+            executor.shutdownNow();
+        } catch (ExecutionException e){
+            System.out.println("Execution error for " + prefix);
+            executor.shutdownNow();
+        } catch(NullPointerException e){
+            System.out.printf("Nullpointer returned for " + prefix);
+
+        }
+    }
+
+    private void saveToFile(String prefix, String gameID, int moves, long time){
+
+        FileWriter out;
         try{
             out =  new FileWriter(prefix + ".csv",true);
-            out.append(result.moveCount + ";");
-            out.append((roundMax == result.moveCount ? "1" : "0") + ";");
-            out.append(watch.getLastTaskTimeMillis() + "\n");
+            out.append(gameID + ";");
+            out.append(moves + ";");
+            out.append((_minRounds == moves ? "1" : "0") + ";");
+            out.append(time + "\n");
             out.close();
         }catch(Exception e){
             e.printStackTrace();
         }
-
-        //printResult(result);
     }
 
     private String formatOutput(Color color, int row, int col){
@@ -121,5 +144,17 @@ public class GameHandler {
             System.out.println(output);
         }
         System.out.println();
+    }
+
+    private String concatRobots(Robot[] robots){
+        String result = "";
+        for(int i = 0; i < robots.length; i++){
+            Robot r = robots[i];
+            result += r.color.name().substring(0, 1) + r.startField.row + ":" + r.startField.col;
+            if(i != robots.length){
+                result += ";";
+            }
+        }
+        return result;
     }
 }

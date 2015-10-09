@@ -29,7 +29,7 @@ public class IddfsSolver implements IGameSolver {
             hasRobot[robot.row][robot.col] = true;
         }
 
-        while(!found){
+        while(!found && !Thread.currentThread().isInterrupted()){
             i++;
 
             GameState result = search(state, game.fields, directions, states, hasRobot,game.goal, i, 0, minMoves);
@@ -37,6 +37,7 @@ public class IddfsSolver implements IGameSolver {
             //System.out.println("Nodes: " + nodes + " Hits: " + hits + " inners: " + inners);
 
             if(result != null){
+                states = null;
                 return new GameResult(null, result.moves);
             }
         }

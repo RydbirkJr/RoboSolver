@@ -37,7 +37,7 @@ public class MapHandler {
                 field = gameBoard.fields[row][col];
 
                 //Runs until a legal startField is found
-            }while(robotFields.contains(field) || field instanceof Goal);
+            }while(!validatePosition(robotFields, field));
 
             //Convert i into the Core.Color enum
             Color color = Color.values()[i];
@@ -47,6 +47,12 @@ public class MapHandler {
         }
 
         return robotList.toArray(new Robot[robotList.size()]);
+    }
+
+    public boolean validatePosition(HashSet<Field> states, Field field){
+        if( (field.row == 7 || field.row == 8) && (field.col ==7 || field.col == 8) ) return false;
+
+        return !(states.contains(field) || field instanceof Goal);
     }
 
     private int getRandom(int min, int max){

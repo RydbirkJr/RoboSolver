@@ -1,31 +1,48 @@
-<!--#Introduction
+#Introduction
 ##Ricochet Robots
 Beskrivelse af spillet
 - Bevæger sig som rooks i skak 
 
-
 ##Goals
-##Previous Solutions
+
 ##Baseline
-Et navn for mål-robotten
-Et navn for ikke-mål-robotterne
-Et state: En robot position
-Et state i søgetræet, s ∈ S
-
-#Solutions
-##JPS+
-###Algorithm
-###Analysis
--->
-***General properties - Should be defined globally for all solutions***
-
-Let *n* be the dimensions of the board where *n = 16*. Let *F* be the set of fields where *F[i,j]* refers to the field at position *(i,j)* starting from the top-left corner. Each field contains information about obstacles in each direction. Let *GR* be the Goal Robot to reach the goal and let *OR* (Obstacle Robots) be the set of Robots $\in R - \{GR\}$.
+Let *n* be the dimensions of the board where *n = 16*. Let *F* be the set of fields where *F[i,j]* refers to the field at position *(i,j)* starting from the top-left corner. Each field contains information about obstacles in each direction.Let *R* be the set of robots, let *GR* be the Goal Robot to reach the goal and let *OR* (Obstacle Robots) be the set of Robots $\in R - \{GR\}$.
 
 A robot state refers to the position of the robot and the required moves to reach the destination, while a game state refers to the complete set of robot states for a current configuration.
 
 The set of directional indicators, *D* refers to the possible directions on the gameboard. Thus *D = { North, East, South, West }*.
 
-***/General variables***
+Each algorithm is given the board of fields *F*, the set of Robots *R* and the goal to reach *G* as input.
+
+##Previous Solutions
+Several solutions exist for Ricochet Robots and the two most common are described below.
+
+###Naive algorithm
+The naive algorithm searches the entire search tree in an incremental order and guarantees an optimal solution. The board representation is a two dimensional array with an additional attribute for each field indicating if a robot stands on the given field. A first-in first-out queue is used for keeping track of the to-be processed game states. Since this solution would never be feasable for solutions requiring more than a couple moves, a hash table is introduced to keep track of already searched game states. Therefore, duplicate game states will be pruned from the search tree.
+
+Moving a robot in direction *d* processes all fields until an obstacle is met. It uses $O(|n|)$ time. This is done for each robot for each game state. Each robot is adjacent to at least one obstacle after the initial move. Thus, a branching factor of $|R| \cdot 3 = 12$ is given, where *R* is the set of robots. 
+
+Processing each game state takes $O(12 \cdot |n|)$ time and finding the optimal solution takes $O(12^k \cdot 12 \cdot |n|) = O(12^{k+1} \cdot |n|)$ time where *k* is the number of moves. The algorithm uses $O(n^2)$ space for the additional attribute for each field, $O(12^k)$ space for the queue and $O(\sum\limits_{i=1}^k 12^i)$ *~* $O(12^k)$ for the hash table. The worst case space impact of the algorithm is $O(12^k)$.
+
+###IDDFS
+The Iterative Deepening Depth First Search algorithm is the claimed to be fastest solver and guarantees an optimal solution. The algorithm uses the same board representation as the naive algorithm including the additional attribute for flagging robot locations. In the following, *h* will refer to the height of the remaining search for the iteration. Thus, $h = MAX - depth$, where *MAX* incrementing search limit while *depth* is the distance to the root in the search tree. The IDDFS is expanded with two additional pruning techniques:
+
+* A hash table is used much like in the naive algorithm, and game state *s* and *h* are stored. If *s* has been reached before by the same height or heigher, it is pruned from the search.
+* A two-dimensional array, *min* storing the minimum number of moves to goal from each field on the board assuming the robots can change direction without bouncing off an obstacle as seen in ***FIGUR SOMETHING***. If $min[GR] > h$ the search is pruned. If $h = min[GR]$ only the *GR* is processed further.
+
+The minimum moves for each field is computed with the goal as the root. The number of moves for the root is set to 0. Each direction is processed incrementing the number of moves with 1. For each direction, all fields is processed until an obstacle or a field with a lower minimum number of moves is met. Due to this incremental movement, every field is only queued once but can be visited several times during the computation. When processing a single field, only two directions is relevant since the field was discovered from one of the other two directions and therefore, these directions will have lower minimum moves. When processing a single field, only $O(|n|)$ fields can be visited. Since all fields is queued exactly once, the minimum moves is computed in $O(|n|^2 \cdot |n|) = O(|n|^3)$ time.
+
+Moving each robot uses $O(|n|)$ time like the naive algorithm 
+
+* worst case for IDDFS
+
+<!---->
+
+#Solutions
+##JPS+
+###Algorithm
+###Analysis
+
 
 #OVERSRKFIT
 ##Graph-DP

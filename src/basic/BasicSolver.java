@@ -2,56 +2,58 @@ package basic;
 
 import core.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * Created by Anders on 31/08/15.
  */
 public class BasicSolver implements IGameSolver {
-    private HashSet<String> states;
-    private LinkedList<GameState> gameQueue;
-    private BasicField[][] fields;
     private Game game;
     private Direction[] directions;
     private boolean goalReached = false;
     private GameState result;
 
     public GameResult solveGame(Game game){
+        Queue<GameState> gameQueue  = new LinkedList<GameState>();
+        HashSet<String> states = new HashSet<String>();
+        BasicField[][] fields = initFields(game.fields);
         initGame(game);
+        GameState initState = initRobots(game.robots);
+        states.add(initState.toString());
+        gameQueue.add(initState);
 
-        while (!gameQueue.isEmpty()){
+        while (!gameQueue.isEmpty() && !Thread.currentThread().isInterrupted()){
             //get state
-            GameState state = gameQueue.pop();
+            GameState state = gameQueue.poll();
 
             //Place robots on board
-            updateRobotSate(state, true);
+            updateRobotSate(state, true, fields);
 
             //Move in all directions
-            moveInAllDirections(state);
+            moveInAllDirections(state, states, gameQueue, fields);
 
             if(goalReached){
+                gameQueue = null;
+                states = null;
                 return getResult();
             }
 
             //Remove robots from board
-            updateRobotSate(state, false);
+            updateRobotSate(state, false, fields);
         }
         return null;
     }
 
-    private void moveInAllDirections(GameState oldState){
+    private void moveInAllDirections(GameState oldState, HashSet<String> states, Queue<GameState> queue, BasicField[][] fields){
         for(RobotState robot : oldState.robots.values()){
             for(Direction dir : directions){
-                GameState newState = moveDirection(dir, oldState, robot);
+                GameState newState = moveDirection(dir, oldState, robot, fields);
 
                 if (newState != null) {
                     String stateShort = newState.toString();
                     if(!states.contains(stateShort)){
                         states.add(stateShort);
-                        gameQueue.add(newState);
+                        queue.add(newState);
                     }
                 }
 
@@ -59,7 +61,7 @@ public class BasicSolver implements IGameSolver {
         }
     }
 
-    private GameState moveDirection(Direction direction, GameState oldState, RobotState robotState){
+    private GameState moveDirection(Direction direction, GameState oldState, RobotState robotState, BasicField[][] fields){
         int row = robotState.row;
         int col = robotState.col;
 
@@ -94,7 +96,7 @@ public class BasicSolver implements IGameSolver {
 
         } while(!nextField.hasRobot);
 
-        if(row == robotState.row && col == robotState.col) return null;
+        if(field.row == robotState.row && field.col == robotState.col) return null;
 
         GameState result = new GameState(oldState, new RobotState(robotState.color, field.row, field.col));
 
@@ -110,7 +112,7 @@ public class BasicSolver implements IGameSolver {
         return result;
     }
 
-    private void updateRobotSate(GameState state, boolean value){
+    private void updateRobotSate(GameState state, boolean value, BasicField[][] fields){
         for(RobotState robot : state.robots.values()){
             fields[robot.row][robot.col].hasRobot = value;
         }
@@ -147,15 +149,7 @@ public class BasicSolver implements IGameSolver {
 
     private void initGame(Game game){
         this.game = game;
-        this.states = new HashSet<String>();
-        this.gameQueue = new LinkedList<GameState>();
-        this.fields = initFields(game.fields);
         this.directions =  new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
-
-        GameState initState = initRobots(game.robots);
-
-        states.add(initState.toString());
-        gameQueue.add(initState);
     }
 
     private GameResult getResult(){
