@@ -14,11 +14,11 @@ public class GraphSolverTest {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        Vertex[][] graph = new GraphSolver().buildGraph(board.fields);
+        Graph graph = new Graph(board.fields);
 
-        Assert.isTrue(graph[0][0].edges.size() == 2, "(0,0) has 2 edges.");
+        Assert.isTrue(graph.getVertex(0,0).edges.size() == 2, "(0,0) has 2 edges.");
 
-        Vertex vertex = graph[7][3];
+        Vertex vertex = graph.getVertex(7,3);
 
         Assert.isTrue(vertex.edges.size() == 4, "(8,4) has 4 edges.");
 
@@ -49,48 +49,46 @@ public class GraphSolverTest {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        GraphSolver solver = new GraphSolver();
-
-        Vertex[][] graph = solver.buildGraph(board.fields);
+        Graph graph = new Graph(board.fields);
 
         //Before applying the robot
         //Testing that if there's only a single field between
         //the robot and an obstacle, the robot can move there,
         //but it cannot bounce back from that position
 
-        Assert.isTrue(graph[9][4].edges.size() == 3);
+        Assert.isTrue(graph.getVertex(9,4).edges.size() == 3);
 
         //After robot applied
-        solver.placeRobot(graph, board.fields, 9,5);
-        Assert.isTrue(graph[9][4].edges.size() == 2);
-        Assert.isTrue(graph[9][5].edges.size() == 4);
+        graph.placeRobot(9, 5);
+        Assert.isTrue(graph.getVertex(9,4).edges.size() == 2);
+        Assert.isTrue(graph.getVertex(9,5).edges.size() == 4);
 
-        graph = solver.buildGraph(board.fields);
+        graph = new Graph(board.fields);
 
         //Tests that the edge is removed from the nearby field.
-        solver.placeRobot(graph, board.fields, 9,6);
-        Assert.isTrue(getEdge(graph[9][5].edges, Direction.EAST) == null);
+        graph.placeRobot(9, 6);
+        Assert.isTrue(getEdge(graph.getVertex(9,5).edges, Direction.EAST) == null);
 
         //Tests that the edge on step further away still remains and has been updated.
-        Edge edge = getEdge(graph[9][4].edges, Direction.EAST);
+        Edge edge = getEdge(graph.getVertex(9,4).edges, Direction.EAST);
         Assert.isTrue(edge.child.col == 5);
 
-        solver.placeRobot(graph, board.fields, 9, 4);
+        graph.placeRobot(9, 4);
 
-        graph = solver.buildGraph(board.fields);
+        graph = new Graph(board.fields);
 
-        solver.placeRobot(graph,board.fields, 15,5);
-        solver.placeRobot(graph,board.fields, 9,5);
+        graph.placeRobot(15,5);
+        graph.placeRobot(9,5);
 
-        edge = getEdge(graph[15][5].edges,Direction.NORTH);
+        edge = getEdge(graph.getVertex(15,15).edges,Direction.NORTH);
         Assert.isTrue(edge.child.row == 10);
 
-        graph = solver.buildGraph(board.fields);
+        graph = new Graph(board.fields);
 
-        solver.placeRobot(graph, board.fields,7,5);
-        solver.placeRobot(graph, board.fields,8,5);
+        graph.placeRobot(7,5);
+        graph.placeRobot(8,5);
 
-        edge = getEdge(graph[7][5].edges,Direction.SOUTH);
+        edge = getEdge(graph.getVertex(7,5).edges,Direction.SOUTH);
 
         Assert.isTrue(edge == null);
     }
@@ -109,39 +107,37 @@ public class GraphSolverTest {
         MapHandler mapHandler = new MapHandler();
         GameBoard board = mapHandler.setupGameBoard();
 
-        GraphSolver solver = new GraphSolver();
+        Graph graph = new Graph(board.fields);
 
-        Vertex[][] graph = solver.buildGraph(board.fields);
-
-        solver.placeRobot(graph, board.fields, 15,5);
-        solver.placeRobot(graph,board.fields, 9,5);
+        graph.placeRobot(15,5);
+        graph.placeRobot(9,5);
 
         //No edge should be present for (9,4) after insertion
-        Edge e = getEdge(graph[9][4].edges,Direction.EAST);
+        Edge e = getEdge(graph.getVertex(9,4).edges,Direction.EAST);
         Assert.isTrue(e == null);
 
         //Test removal
-        solver.removeRobot(graph, board.fields, 9,5);
-        e = getEdge(graph[9][4].edges,Direction.EAST);
+        graph.removeRobot(9,5);
+        e = getEdge(graph.getVertex(9,4).edges,Direction.EAST);
 
         Assert.isTrue(e.child.col == 9);
 
-        e = getEdge(graph[0][5].edges, Direction.SOUTH);
+        e = getEdge(graph.getVertex(0,5).edges, Direction.SOUTH);
 
         Assert.isTrue(e.child.row == 14);
         Assert.isTrue(e.child.col == 5);
 
-        e = getEdge(graph[15][5].edges, Direction.NORTH);
+        e = getEdge(graph.getVertex(15,15).edges, Direction.NORTH);
 
         Assert.isTrue(e.child.row == 0);
 
-        graph = solver.buildGraph(board.fields);
+        graph = new Graph(board.fields);
 
-        solver.placeRobot(graph, board.fields,5,1);
-        solver.placeRobot(graph, board.fields,6,0);
-        solver.placeRobot(graph, board.fields,5,0);
+        graph.placeRobot(5,1);
+        graph.placeRobot(6,0);
+        graph.placeRobot(5,0);
 
-        Vertex v = graph[5][0];
+        Vertex v = graph.getVertex(5,0);
 
         Assert.isTrue(v.edges.size() == 0);
     }

@@ -29,9 +29,6 @@ public class MinimumMoves {
 
         queue.add(fields[goal.row][goal.col]);
         minMoves[goal.row][goal.col] = 0;
-
-        int count = 0;
-        int totalCount = 0;
         while (! queue.isEmpty()){
             Field f = queue.poll();
             int depth = minMoves[f.row][f.col] + 1;
@@ -41,17 +38,13 @@ public class MinimumMoves {
 
                 while (temp.canMove(d)){
                     temp = getField(fields, temp.row, temp.col, d);
-                    totalCount++;
                     // if minMoves < depth then break
                     if( !(minMoves[temp.row][temp.col] >= depth)) break;
 
                     if( !(minMoves[temp.row][temp.col] == depth) ){
                         queue.add(temp);
                         minMoves[temp.row][temp.col] = depth;
-                    } else {
-                        count++;
                     }
-
                 }
 
             }
@@ -61,9 +54,6 @@ public class MinimumMoves {
         minMoves[7][8] = 0;
         minMoves[8][7] = 0;
         minMoves[8][8] = 0;
-
-        System.out.println(totalCount);
-        System.out.println(count);
         return minMoves;
     }
 

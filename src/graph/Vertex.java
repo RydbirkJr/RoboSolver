@@ -11,8 +11,8 @@ import java.util.Map;
  * Created by Anders on 07/09/15.
  */
 public class Vertex {
-    int row, col;
-    List<Edge> edges;
+    public int row, col;
+    public List<Edge> edges;
 
     public Vertex(int row, int col){
         this.row = row;
