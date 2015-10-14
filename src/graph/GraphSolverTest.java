@@ -80,7 +80,7 @@ public class GraphSolverTest {
         graph.placeRobot(15,5);
         graph.placeRobot(9,5);
 
-        edge = getEdge(graph.getVertex(15,15).edges,Direction.NORTH);
+        edge = getEdge(graph.getVertex(15,5).edges,Direction.NORTH);
         Assert.isTrue(edge.child.row == 10);
 
         graph = new Graph(board.fields);
@@ -127,7 +127,7 @@ public class GraphSolverTest {
         Assert.isTrue(e.child.row == 14);
         Assert.isTrue(e.child.col == 5);
 
-        e = getEdge(graph.getVertex(15,15).edges, Direction.NORTH);
+        e = getEdge(graph.getVertex(15,5).edges, Direction.NORTH);
 
         Assert.isTrue(e.child.row == 0);
 
@@ -141,27 +141,27 @@ public class GraphSolverTest {
 
         Assert.isTrue(v.edges.size() == 0);
     }
-
-    @Test
-    public void testSolveGame() throws Exception {
-        MapHandler mapHandler = new MapHandler();
-        GameBoard board = mapHandler.setupGameBoard();
-        Robot[] robots = mapHandler.getRobotPositions(board);
-
-        Field[][] fields = board.fields;
 //
-//        Robot[] robots = new Robot[] {
-//            new Robot(Color.BLUE, fields[11][12]),
-//            new Robot(Color.RED, fields[5][15]),
-//            new Robot(Color.GREEN, fields[8][5]),
-//            new Robot(Color.YELLOW, fields[3][8])
-//        };
-//new Goal[] {new Goal(14,2, Color.GREEN)
-        for(Goal goal : board.goals){
-            System.out.println("Goal: " + goal.color.name() + " " + (goal.row + 1) + ":" + (goal.col + 1));
-            Game game = new Game(board.fields, robots, goal);
-            new GraphSolver().solveGame(game);
-        }
+//    @Test
+//    public void testSolveGame() throws Exception {
+//        MapHandler mapHandler = new MapHandler();
+//        GameBoard board = mapHandler.setupGameBoard();
+//        Robot[] robots = mapHandler.getRobotPositions(board);
+//
+//        Field[][] fields = board.fields;
+////
+////        Robot[] robots = new Robot[] {
+////            new Robot(Color.BLUE, fields[11][12]),
+////            new Robot(Color.RED, fields[5][15]),
+////            new Robot(Color.GREEN, fields[8][5]),
+////            new Robot(Color.YELLOW, fields[3][8])
+////        };
+////new Goal[] {new Goal(14,2, Color.GREEN)
+//        for(Goal goal : board.goals){
+//            System.out.println("Goal: " + goal.color.name() + " " + (goal.row + 1) + ":" + (goal.col + 1));
+//            Game game = new Game(board.fields, robots, goal);
+//            new GraphSolver().solveGame(game);
+//        }
 
-    }
+    //}
 }
