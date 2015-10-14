@@ -90,7 +90,7 @@ public class GameHandler {
             }
 
             saveToFile(prefix, gameID, res.moveCount, timeSpend);
-            //System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount);
+            System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount);
 
         }catch(TimeoutException e){
             System.out.println("Timeout for " + prefix);
@@ -99,6 +99,7 @@ public class GameHandler {
             System.out.println("Interrupted for " + prefix);
             executor.shutdownNow();
         } catch (ExecutionException e){
+            e.printStackTrace();
             System.out.println("Execution error for " + prefix);
             executor.shutdownNow();
         } catch(NullPointerException e){
