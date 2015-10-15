@@ -14,8 +14,6 @@ The set of directional indicators, *D* refers to the possible directions on the 
 
 Each algorithm is given the board of fields *F*, the set of Robots *R* and the goal to reach *G* as input.
 
-
-
 ##Previous Solutions
 Several solutions exist for Ricochet Robots and the two most common are described below.
 
@@ -39,7 +37,76 @@ The minimum moves for each field is computed with the goal as the root. The numb
 Finding the optimal solution uses $O(b^k \cdot n + n^3)$ time where *b* is the branching factor and *k* is the number of moves. However, the space impact of the search itself is only $O(k)$ since the algorithm is recursive. The space analysis of the hash table is the same as in the naive algorithm. The worst case space impact is $O(b^k+k+n^2) = O(b^k+n^2)$.
 
 #Solutions
-##JPS+
+##Stateless
+This algorithm is an attempt to solve the game without keeping track of each game state. The obvious advantage of this is to eliminate the branching factor's impact on the running time. Several tradeoffs are used, and the algorithm does not guarantee an optimal solution. However, the algorithm guarantees that the optimal number of moves is either the same as the result of the algorithm or less when a solution is found.
+
+###Algorithm
+The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. In the latter, landing on a field is denoted a *final state* while moving over a field is denoted an *intermediate state*. Finale states are queued in a min-heap queue, ordered by the number of moves. These states represent only the single robot's state, thus for each element in the queue, only one robot is processed. The robot is moved in all directions followed by a validation if the goal has been reached. A heuristic is introduced as the termination state. Let *r* be the current best result and *k* be the current searched depth, then the search is terminated if $r \leq (k + 2)$.
+
+Assumption: A robot never has a final on the same field more than once.
+Assumption: A robot has only one intermediate state per <field,direction> combination.
+
+####Datastructures
+Definer field
+
+####Moving and States
+- Tradeoffs
+	- Hvilke?
+	- Ikke alle cases tages i betragtning
+
+#####Adding a new state
+- Tilføjet hvis der ikke allerede er en final?
+- Gemmer jeg både finals og intermediates?
+- pruning
+	- tradeoff på finals - kan havne på samme felt men det gemmes ikke
+
+#####Bubbledown
+- Tilføjer nye states
+- Tradeoffs
+	- r1 kan bounce på r2, som derefter bouncer på r1 et helt andet sted
+
+analyse:
+
+
+
+
+b = 4
+k = moves
+k * b * |n|
+
+
+The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. Each of these are described below:
+
+* **Intermediate states**: An intermediate robot state is when a robot moves past a field and no obstacle nor robot is met. Thus, the robot can reach on the given field, but it cannot land on it yet. Therefore, a intermediate robot state is stored on the field for the given robot, it's direction and the current amount of moves required for the robot to reach this field.
+
+* **Final states**: A final robot state is given when a robot bounces off an obstacle or another robot. The final robot state is stored on the field for the given robot and the number of required moves to reach it. The robot state is also queued for further movement.
+
+Hvad gør den stateless?
+Den rykker sig i alle retninger samtidig!
+Den bruger data på brættet i stedet for at huske hele game states
+assumptions - mange tradeoffs
+
+
+Prioritized queue
+
+
+
+###Moving
+
+###Update adjacent fields
+
+
+
+
+Hvert move koster |n| -> hvert niveau koster b * |n|
+At fine resultatet koster k * b * |n| * prioritized queue insert/remove
+Pris?
+Additional memory for each field...
+
+Vi ha
+
+The stateless algorithm is an attempt to avoid the exponential running times of most solutions at the cost of increased space usage. Stateless refers to that each robot move only depends on other moves that affects the robot itself. Thus, 
+
 ###Algorithm
 ###Analysis
 
