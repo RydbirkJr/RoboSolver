@@ -1,16 +1,14 @@
 #Introduction
 ##Ricochet Robots
-Beskrivelse af spillet
-- Bevæger sig som rooks i skak 
-
-##Goals
+Beskrivelse af spillet, problemstilling
+Mål for diverse solvers
 
 ##Baseline
-Let *n* be the dimensions of the board where *n = 16*. Let *F* be the set of fields where *F[i,j]* refers to the field at position *(i,j)* starting from the top-left corner. Each field contains information about obstacles in each direction. Let *R* be the set of robots, let *GR* be the Goal Robot to reach the goal and let *OR* (Obstacle Robots) be the set of Robots $\in R - \{GR\}$.
+Let *n* be the dimensions of the board where *n = 16*. Let *F* be the set of fields where *F[i,j]* refers to the field at position *(i,j)* starting from the top-left corner. Each field contains information about obstacles in each direction. Let *R* be the set of robots, let *GR* be the Goal Robot to reach the goal and let *OR* be the set of Obstacle Robots $\in R - \{GR\}$.
 
-A robot state refers to the position of the robot and the required moves to reach the destination, while a game state refers to the complete set of robot states for a current configuration.
+A robot state refers to the position of the robot and the required moves to reach the state, while a game state refers to the complete set of robot states for a current configuration.
 
-The set of directional indicators, *D* refers to the possible directions on the gameboard. Thus $D = \{ North, East, South, West \}$.
+The set of directional indicators *D* refers to the possible directions on the gameboard. Thus $D = \{ North, East, South, West \}$.
 
 Each algorithm is given the board of fields *F*, the set of Robots *R* and the goal to reach *G* as input.
 
@@ -22,7 +20,7 @@ The naive algorithm searches the entire search tree in an incremental order and 
 
 To move a robot, all fields in a given direction is processed until an obstacle is met. It uses $O(n)$ time. This is done for each robot for each direction for each game state. Processing each game state takes $O(b \cdot n)$ time where *b* is the branching factor.
 
-Finding the optimal solution takes $O(b^k \cdot b \cdot n) = O(b^{k+1} \cdot n)$ time where *k* is the number of moves. The algorithm uses $O(n^2)$ space for the additional attribute for each field, $O(b^k)$ space for the queue and $O \Big(\sum\limits_{i=1}^k b^i \Big)$ *~* $O(b^k)$ for the hash table. The worst case space impact of the algorithm is $O(b^k + n^2)$.
+Solving a giving configuration uses $O(b^k \cdot b \cdot n) = O(b^{k+1} \cdot n)$ time where *k* is the number of moves. The algorithm uses $O(n^2)$ space for the additional attribute for each field, $O(b^k)$ space for the queue and $O \Big(\sum\limits_{i=1}^k b^i \Big)$ *~* $O(b^k)$ for the hash table. The worst case space impact of the algorithm is $O(b^k + n^2)$.
 
 Each robot is adjacent to at least one obstacle after the initial move. Therefore the branching factor is given by $b = |R| \cdot 3 = 12$.
 
@@ -30,85 +28,37 @@ Each robot is adjacent to at least one obstacle after the initial move. Therefor
 The Iterative Deepening Depth First Search algorithm is the claimed to be fastest solver and guarantees an optimal solution. The algorithm uses the same board representation as the naive algorithm including the additional attribute for flagging robot locations. In the following, *h* will refer to the height of the remaining search for the iteration. Thus, $h = MAX - depth$, where *MAX* is the incrementing search limit while *depth* is the distance to the root in the search tree. The IDDFS includes two additional pruning techniques:
 
 * A hash table stores a combination of game state *s* and *h*. If *s* has been reached before by the same height or heigher, it is pruned from the search.
-* A two-dimensional array stores the minimum number of moves from each field to goal. This is refered to as *min*. It is assumed that the robots can change direction without bouncing off an obstacle as seen in ***FIGUR SOMETHING***. If $min[GR] > h$ the search is pruned. If $h = min[GR]$ only the *GR* is processed further in the search tree.
+* A two-dimensional array stores the minimum number of moves from each field to goal. In the latter, *min[i,j]* refers to the minimum number of moves to goal from position *(i,j)*. It is assumed that the robots can change direction without bouncing off an obstacle as seen in ***FIGUR SOMETHING***. If $min[GR] > h$ the search is pruned. If $h = min[GR]$ only the *GR* is processed further in the search tree.
 
-The minimum moves for each field is computed with the goal as the root. The number of moves for the root is set to 0. Each direction is processed incrementing the number of moves with 1. For each direction, all fields is processed until an obstacle or a field with a lower minimum number of moves is met. Due to this incremental movement, every field is only queued once but can be visited several times during the computation. When processing a single field, only two directions is relevant since the field was discovered from one of the other two directions and therefore, these directions is guaranteed to be more optimal. When processing a single field, only $O(n)$ fields can be visited. Since all fields is queued exactly once, the minimum moves is computed in $O(n^2 \cdot n) = O(n^3)$ time and uses $O(n^2)$ space.
+The minimum moves for each field is computed with the goal as the root. The number of moves for the root is set to 0. Each direction is processed incrementing the number of moves with 1. For each direction, all fields is processed until an obstacle or a field with a lower minimum number of moves is met. Due to this incremental movement, every field is only queued once but can be visited several times during the computation. When processing a single field, only two directions is relevant since the field was discovered from one of the other two directions and therefore, these directions is guaranteed to be more optimal. When processing a single field, only $O(n)$ fields are visited. Since all fields is queued exactly once, the minimum moves is computed in $O(n^2 \cdot n) = O(n^3)$ time and uses $O(n^2)$ space.
 
 Finding the optimal solution uses $O(b^k \cdot n + n^3)$ time where *b* is the branching factor and *k* is the number of moves. However, the space impact of the search itself is only $O(k)$ since the algorithm is recursive. The space analysis of the hash table is the same as in the naive algorithm. The worst case space impact is $O(b^k+k+n^2) = O(b^k+n^2)$.
 
 #Solutions
 ##Stateless
-This algorithm is an attempt to solve the game without keeping track of each game state. The obvious advantage of this is to eliminate the branching factor's impact on the running time. Several tradeoffs are used, and the algorithm does not guarantee an optimal solution. However, the algorithm guarantees that the optimal number of moves is either the same as the result of the algorithm or less when a solution is found.
+This algorithm is an attempt to solve the game without keeping track of each game state. The 
+obvious advantage of this is to eliminate the branching factor's impact on the running time. The algorithm does not guarantee an optimal solution. The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. In the latter, landing on a field is denoted a *final state* while moving over a field is denoted an *intermediate state*. The algorithm assumes that every field can only have one final state for each robot and only one intermediate state for each combination of direction and color.
+
+Finale states are queued in a min-heap queue, ordered by the number of moves. These states represent only the single robot's state, thus for each element in the queue, only one robot is processed. The robot is moved in all directions and new states are created for each visited field if no redundant states already exists for the given field. The algorithm terminates when there's no more robot states to process and returns the best result.
 
 ###Algorithm
-The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. In the latter, landing on a field is denoted a *final state* while moving over a field is denoted an *intermediate state*. Finale states are queued in a min-heap queue, ordered by the number of moves. These states represent only the single robot's state, thus for each element in the queue, only one robot is processed. The robot is moved in all directions followed by a validation if the goal has been reached. A heuristic is introduced as the termination state. Let *r* be the current best result and *k* be the current searched depth, then the search is terminated if $r \leq (k + 2)$.
-
-Assumption: A robot never has a final on the same field more than once.
-Assumption: A robot has only one intermediate state per <field,direction> combination.
-
-####Datastructures
-Definer field
+Let *S[i,j]* refer to the element storing states for *F[i,j]*. *S[i,j]* is instantiated at the first visit to *F[i,j]*. Each $s \in S$ stores final states in a hash table using the color of the robot as key. In addition, *s* stores all intermediate states in a hash table using the direction of the robot move as the key. Finally, *s* stores if a robot starts on the field.
 
 ####Moving and States
-- Tradeoffs
-	- Hvilke?
-	- Ikke alle cases tages i betragtning
+Moving a robot determines the state for each field processed. The state depends upon the next field to process if it is possible to move further. Four cases is taken into consideration when moving robot *r*. In the following *a* will refer to the adjacent field in direction *d*:
 
-#####Adding a new state
-- Tilføjet hvis der ikke allerede er en final?
-- Gemmer jeg både finals og intermediates?
-- pruning
-	- tradeoff på finals - kan havne på samme felt men det gemmes ikke
+1. *F[i,j]* cannot move in direction *d*. A final state, *f* is added to *S[i,j]*. If a final state did not already exist, *f* is added to the queue for future processing.
+2. *F[i,j]* can move in direction *d*:
+	a. No final robot states exist on *a*. Thus, an intermediate state is added to *S[i,j]* and *a* is processed next.
+	b. A final robot state exist on *a* and its color does not match robot *r*'s. The final state *f* is set to depend upon the lowest final state in *S[a]*, the move counts are aggregated and *f* is added to *S[i,j]*. If a final state did not already exist, *f* is added to the queue while *a* is processed next.
+	c. A robot starts on *a*. The same as case *1.b* is applied, with the addition that all the further processing of fields in direction *d* for the current *r* will be added 1 to the number of required moves from *a* and forward. This refers to the required movement of the starting robot on *a*.
 
-#####Bubbledown
-- Tilføjer nye states
-- Tradeoffs
-	- r1 kan bounce på r2, som derefter bouncer på r1 et helt andet sted
+Whenever a new final state *f* is added to the queue, adjacent fields are searched for intermediate states on collision with *f*. Let *a* be the adjacent field in direction *d* and let *d'* be the opposite direction of *d*. All intermediate states $i \in I$ where $i.color \neq f.color \land i.direction = d'$ are removed from $S[a]$ and converted to final states that depend upon *f*. If no final states already exists for the given color in $S[a]$, the new final states are added to the queue.
 
-analyse:
-
-
-
-
-b = 4
-k = moves
-k * b * |n|
-
-
-The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. Each of these are described below:
-
-* **Intermediate states**: An intermediate robot state is when a robot moves past a field and no obstacle nor robot is met. Thus, the robot can reach on the given field, but it cannot land on it yet. Therefore, a intermediate robot state is stored on the field for the given robot, it's direction and the current amount of moves required for the robot to reach this field.
-
-* **Final states**: A final robot state is given when a robot bounces off an obstacle or another robot. The final robot state is stored on the field for the given robot and the number of required moves to reach it. The robot state is also queued for further movement.
-
-Hvad gør den stateless?
-Den rykker sig i alle retninger samtidig!
-Den bruger data på brættet i stedet for at huske hele game states
-assumptions - mange tradeoffs
-
-
-Prioritized queue
-
-
-
-###Moving
-
-###Update adjacent fields
-
-
-
-
-Hvert move koster |n| -> hvert niveau koster b * |n|
-At fine resultatet koster k * b * |n| * prioritized queue insert/remove
-Pris?
-Additional memory for each field...
-
-Vi ha
-
-The stateless algorithm is an attempt to avoid the exponential running times of most solutions at the cost of increased space usage. Stateless refers to that each robot move only depends on other moves that affects the robot itself. Thus, 
-
-###Algorithm
 ###Analysis
+The algorithm uses a min-heap queue and insertion and removal uses $O(log(m))$ time where *m* refers to the number of elements in the queue. Since each field is only processed once for every robot, $m=O(n^2 \cdot |R|)$. Thus, insertion and removal in the queue uses $O(log(|R| \cdot n^2))$ time. Moving a robot uses $O(2n)$ time like the naive algorithm. Inserting, lookup and removal from the hash tables in *S* uses $O(1)$ time. Processing each robot state uses $O(2n \cdot 2log(|R| \cdot n^2))$ time and the total worst case uses $O(n^2 \cdot 2n \cdot 2log(|R| \cdot n^2)) = O(n^3 \cdot log(n^2))$ time.
+
+In the worst case, each $s \in S$ stores $O(|R|)$ final states and $O(|D| \cdot |R|)$ intermediate states. The queue contains $O(|R| \cdot n^2)$ elements. Therefore, the worst case space impact is $O(n^2 \cdot(1 + |R| + |R| \cdot |D|))$.
 
 ##Graph v1
 In the following the graph based algorithm will be presented. The algorithm assumes that all moves by the *OR* can be applied before the *GR* moves towards goal. The *GR* can depend on *OR* states but *OR* can only depend on the starting state of *GR*.
@@ -175,7 +125,7 @@ For the solver, each game state processed requires 4 robot placements and remova
 
 Validating, inserting and enqueuing a new game state uses $O(1)$ time. Moving all robot uses $O(b)$ time, where *b* is the branching factor. Therefore, the time used for each processed game state is $O(8 \cdot n + n^2 \cdot |D| + b) = O(n^2)$. In total, the worst case time usage for the algorithm is $O(b^k \cdot n^2)$ where k is the number of moves. 
 
-The space impact of the queue and the hashtable is $O(b^k)$. The worst case space impact of the algorithm is $O(n^2 \cdot |D| + b^k + n^2) = O(b^k + n^2 \cdot (1 + |D|))$.
+The space impact of the queue and the hashtable is $O(b^k)$. The worst case space impact of the algorithm is $O(n^2 \cdot |D| + 2b^k + n^2) = O(b^k + n^2 \cdot (1 + |D|))$.
 
 After the initial move, each *OR* is adjacent to at least one obstacle. The branching factor is given by $b = |OR| \cdot 3 = 9$.
 
@@ -197,18 +147,29 @@ When a given solution is found, the BFS is still applied until the heuristic fun
 2. Let *c* be the current node processed in the BFS and let *c.d* denote the distance to the root. If $(min[c] + c.d) \geq depth$ is true, the current searched branch in the BFS tree is obsolete and the rest of this branch is skipped. However, the BFS is not terminated.
 
 ###Analysis
-The minimum moves computation is the only addition to the worst case analysis. As already described in the IDDFS solver, it uses $O(n^3)$ time and $O(n^2)$ space. Therefore, the total worst case time usage is $O(n^3+b^k \cdot n^2) = O(b^k \cdot n^2)$. Since the branching factor continues to be the dominant factor, the worst case time stays the same. The space impact of the algorithm is $O(b^k + n^2 \cdot (1 + |D|) + n^2) = O(b^k + n^2 \cdot (2 + |D|))$ and shows a slightly increase in the space impact.
+The minimum moves computation is the only addition to the worst case analysis. As already described in the IDDFS solver, it uses $O(n^3)$ time and $O(n^2)$ space. Therefore, the total worst case time usage is $O(n^3+b^k \cdot n^2) = O(b^k \cdot n^2)$. Since the branching factor continues to be the dominant factor, the worst case time remains the same. The space impact of the algorithm is $O(b^k + n^2 \cdot (1 + |D|) + n^2) = O(b^k + n^2 \cdot (2 + |D|))$ and shows a slight increase in the space impact.
 
-***Notes***
+#Spørgsmål
+1. I hver analyse hvor jeg refererer til *k* (moves) og *b* (branching factor) definerer jeg dem. Burde jeg introducere disse variabler allerede i baseline?
+2. I space-analysen af IDDFS-algoritmen skriver jeg: $O(b^k+k+n^2) = O(b^k+n^2)$. Er det korrekt at eliminere k når jeg reducerer, og burde jeg reducere helt til $O(b^k)$?
+3. I det tilfælde hvor $O(|D| \cdot n^2)$ - er det så korrekt at forkorte til $O(n^2)$ da $|D| = 4$?
+4. I forhold til Stateless algoritmen, space analysen. Burde jeg forkorte $O(n^2 \cdot (1 + |R| + |R| \cdot |D|))$ yderligere til $O(n^2)$? Her er |R| antallet af robotter, n er brættets dimensioner og |D| er antallet af retninger.
+5. Jeg har forsøgt at blive mere direkte i sproget. Hvis der er noget gennemgående i forhold til sproget må du meget gerne sige til.
+6. I forhold til at illustrere de forskellige algoritmer - har du et forslag til program til at lave grid-illustrationer?
+7. Skal jeg lave en opsumering i afslutningen af Solutions-afsnittet og angive running time og space impact pr. algoritme i en tabel?
 
-It's actually not $b^k$ since the hashtable prunes the search tree, making it more like $f(k,b)^k$ where x decreases as k increases. How to include this?
+Jeg går igang med databehandling nu her. Jeg tænker det kunne være interessant at undersøge følgende sammenhænge (x,y) i et pindediagram / graf:
 
-Graph v2: The tricky part: Use the robo solver for finding an estimated maximum up front. The lowest count is gurantied optimal or larger. Might be used for pruning the BFS search up front.
+1. Fordeling af antal løsninger pr. antal træk til mål: Antal træk / summeret antal pr træk (baseret på IDDFS/naiv)
+2. Tidsforbrug pr. algoritme som en funktion af træk til mål: Antal træk / gennemsnitstid
+3. Procentvis træfsikkerhed som en funktion af træk til mål: Antal træk / procentvis træfsikkerhed
 
+Hvis du har et forslag til andre kombinationer der kunne være interessante, så sig gerne til!
+
+<!--***Notes***
 In general for graphs: A function for obstacle count vs fields -> how much of the graph is actually searched.
 - Find the maximum number of obstacles for different sizes
-
-
+-->
 
 #Experimental results
 ##Setup

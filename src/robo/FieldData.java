@@ -3,6 +3,7 @@ package robo;
 import core.Color;
 import core.Direction;
 import core.Field;
+import core.Robot;
 
 import java.util.*;
 
@@ -10,10 +11,8 @@ import java.util.*;
  * Created by Anders on 27/08/15.
  */
 public class FieldData {
-    //private HashMap<Color, TreeSet<RobotStats>> robotStats;
-    private ArrayList<RobotStats> finalStats;
-    private ArrayList<RobotStats> intermediateStats;
-    private HashSet<Color> finalIndicators;
+    private HashMap<Color, RobotStats> finals;
+    private HashMap<Direction, HashMap<Color, RobotStats>> intermediates;
 
     public RobotStats starter;
     public Field field;
@@ -24,9 +23,13 @@ public class FieldData {
         this.row = row;
         this.col = col;
         this.field = field;
-        this.finalStats = new ArrayList<RobotStats>();
-        this.intermediateStats = new ArrayList<RobotStats>();
-        this.finalIndicators = new HashSet<Color>();
+
+        this.finals = new HashMap<Color, RobotStats>();
+        this.intermediates = new HashMap<Direction, HashMap<Color, RobotStats>>();
+        this.intermediates.put(Direction.NORTH, new HashMap<Color, RobotStats>());
+        this.intermediates.put(Direction.EAST, new HashMap<Color, RobotStats>());
+        this.intermediates.put(Direction.SOUTH, new HashMap<Color, RobotStats>());
+        this.intermediates.put(Direction.WEST, new HashMap<Color, RobotStats>());
     }
 
     /**
@@ -41,81 +44,115 @@ public class FieldData {
         addRobotStats(stats);
     }
 
+    /**
+     * Adds or updates the final stats.
+     * @param stats
+     * @return Returns true if inserted, else false.
+     */
+    private boolean addFinalStats(RobotStats stats){
+        RobotStats temp = finals.get(stats.color);
+
+        if(temp != null){
+            if(temp.moves > stats.moves){
+                //Update the stored final if better
+                temp.override(stats);
+            }
+
+            return false;
+
+        } else {
+            finals.put(stats.color, stats);
+            return true;
+        }
+    }
+
+    /**
+     * Adds or updates the intermediate stats.
+     * @param stats
+     * @return Returns true if inserted, else false.
+     */
+    private boolean addIntermediateStats(RobotStats stats){
+        RobotStats temp = intermediates.get(stats.direction).get(stats.color);
+
+        if(temp != null){
+            if(temp.moves > stats.moves){
+                temp.override(stats);
+            }
+            return false;
+        } else {
+            intermediates.get(stats.direction).put(stats.color, stats);
+            return true;
+        }
+
+    }
+
     public boolean addRobotStats(RobotStats stats){
 
-        if(finalIndicators.contains(stats.color)){
-            //if it's already visited by a final of the same color, it's not really interesting.. yet
-            return false;
-        }
-
-        //Update if a final exists for the field
         if(stats.isFinal){
-            finalIndicators.add(stats.color);
-            finalStats.add(stats);
+            return addFinalStats(stats);
         } else {
-            intermediateStats.add(stats);
+            return addIntermediateStats(stats);
         }
-
-        return true;
     }
-
-
 
     public boolean hasOtherFinals(Color color){
-        return finalIndicators != null && (finalIndicators.contains(color) ? -1 : 0) + finalIndicators.size() > 0;
-    }
-
-    public boolean hasBeenReached(Color color){
-        return finalIndicators != null && finalIndicators.contains(color);
+        return (finals.size() + (finals.containsKey(color) ? -1 : 0) ) > 0;
     }
 
     public RobotStats getResult(Color goal){
-        for(RobotStats stats : finalStats){
-            if(stats.color == goal) return stats;
-        }
-
-        return null;
+        return finals.get(goal);
     }
 
-    public RobotStats getFinalFromOtherRobots(Color color){
-        Collections.sort(finalStats, new RobotStatsComparator());
-        Iterator<RobotStats> iterator = finalStats.iterator();
+    /**
+     *
+     * @param color
+     * @return Returns lowest other final or null.
+     */
+    public RobotStats getLowestOtherFinal(Color color){
 
-        while (iterator.hasNext()){
-            RobotStats stat = iterator.next();
-            if(stat.color != color){
-                return stat;
+        RobotStats result = null;
+        for(RobotStats stats : finals.values()){
+            //Skip same color
+            if(stats.color == color) continue;
+
+            if(result == null) {
+                result = stats;
+            } else if(result.moves > stats.moves) {
+                result = stats;
             }
         }
-        //Should not be hit
-        return null;
+
+        return result;
+    }
+
+    public boolean hasStarter(Color color){
+        return starter != null && starter.color != color;
     }
 
     /**
      *
      * @param robot
-     * @param direction The direction the given robot has to travel to hit the final field
+     * @param direction The direction the given robot has to travel to hit the final field.
+     * @return A list of intermediate states that has been removed from the intermediates.
+     * Should be inserted and eventually queued.
      */
-    public boolean bubbleDownField(RobotStats robot, Direction direction){
+    public List<RobotStats> bubbleDownField(RobotStats robot, Direction direction){
+        List<RobotStats> result = new ArrayList<RobotStats>();
+        HashMap<Color, RobotStats> temp = intermediates.get(direction);
 
-        //In case no final stats exists: return
-        if(intermediateStats == null) return false;
+        if(temp.isEmpty()) return result;
 
-        //For each intermediate element in the field
-        for(Iterator<RobotStats> it = intermediateStats.iterator(); it.hasNext();){
-            RobotStats stats = it.next();
+        for(Iterator<RobotStats> iterator = temp.values().iterator(); iterator.hasNext();){
+            RobotStats next = iterator.next();
 
-            if(stats.color != robot.color && stats.direction == direction){
-                //Correct direction and the right color
-                stats.moves += robot.moves;
-                stats.isFinal = true;
-                it.remove();
-                finalIndicators.add(stats.color);
-                finalStats.add(stats);
-                //TODO: Should bubbled down fields also update adjacent fields?
+            if(next.color != robot.color){
+                result.add(next);
+                iterator.remove();
             }
         }
 
-        return true;
+        return result;
     }
 }
+
+

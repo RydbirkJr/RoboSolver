@@ -6,6 +6,8 @@ import core.GameResult;
 import core.WinningMove;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by Anders on 27/08/15.
@@ -33,6 +35,7 @@ public class DataWrapper {
     }
 
     public GameResult formatResult(RobotStats finalStats){
+        if(finalStats == null) return null;
         ArrayList<WinningMove> moves = getMoves(finalStats);
         Collections.reverse(moves);
         return new GameResult(moves,finalStats.moves);

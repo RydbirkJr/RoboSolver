@@ -25,6 +25,16 @@ public class RobotStats {
         this.field = field;
         this.prevRobot = prevRobot;
         this.dependUpon = dependUpon;
+    }
 
+    /**
+     * Will override only moving data, but never field, final state or color.
+     * @param stats
+     */
+    public void override(RobotStats stats){
+        this.moves = stats.moves;
+        this.direction = stats.direction;
+        this.prevRobot = stats.prevRobot;
+        this.dependUpon = stats.dependUpon;
     }
 }

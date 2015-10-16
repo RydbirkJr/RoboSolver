@@ -6,9 +6,12 @@ import core.*;
 import graph.GraphSolver;
 import graph_v2.GraphSolver_v2;
 import org.springframework.util.StopWatch;
-import robo.RoboSolver;
+import robo.StatelessSolver;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.*;
 
 /**
@@ -19,7 +22,7 @@ public class GameHandler {
     private GameBoard _gameBoard;
     private MapHandler _mapHandler;
     private int _minRounds = 0;
-    private boolean test = false;
+    private String _directive;
 
     public GameHandler(){
         //Setup the map
@@ -30,14 +33,14 @@ public class GameHandler {
     /**
      * Initializing function, setups all the game bounds.
      */
-    public void init(){
+    public void processGame(int iterations){
 
         //printRobots();
 
-        //Start monitoring stop watch
+        _directive = createNewDataFolder();
 
 
-        for(int i = 0; i < 100; i++){
+        for(int i = 0; i < iterations; i++){
             StopWatch roundWatch = new StopWatch();
             roundWatch.start();
             Robot[] robots = _mapHandler.getRobotPositions(_gameBoard);
@@ -50,21 +53,11 @@ public class GameHandler {
                     String gameID = robotPositions + "GOAL="  + goal.color.name().charAt(0) + goal.row + ":" + goal.col;
                     Game game = new Game(_gameBoard.fields,robots,goal);
                     //System.out.println(gameID);
-                    {
-                        runGame(game, new BasicSolver(), "basic",gameID, true);
-                    }
-                    {
-                        runGame(game, new IddfsSolver(), "iddfs", gameID, false);
-                    }
-                    {
-                        runGame(game, new RoboSolver(), "robo", gameID, false);
-                    }
-                    {
-                        runGame(game, new GraphSolver(), "graph", gameID, false);
-                    }
-                    {
-                        runGame(game, new GraphSolver_v2(), "graph-Optimized", gameID, false);
-                    }
+                        runGame(game, new BasicSolver(), Solver.NAIVE,gameID, true);
+                        runGame(game, new IddfsSolver(), Solver.IDDFS, gameID, true);
+                        runGame(game, new StatelessSolver(), Solver.STATELESS, gameID, false);
+                        runGame(game, new GraphSolver(), Solver.GRAPHv1, gameID, false);
+                        runGame(game, new GraphSolver_v2(), Solver.GRAPHv2, gameID, false);
                 }
 
                 roundWatch.stop();
@@ -89,8 +82,10 @@ public class GameHandler {
                 _minRounds = res.moveCount;
             }
 
-            saveToFile(prefix, gameID, res.moveCount, timeSpend);
+            saveToFile(prefix, gameID, res.moveCount, timeSpend, (isBasic || _minRounds <= res.moveCount));
             //System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount);
+            return;
+
 
         }catch(TimeoutException e){
             System.out.println("Timeout for " + prefix);
@@ -102,20 +97,21 @@ public class GameHandler {
             System.out.println("Execution error for " + prefix);
             executor.shutdownNow();
         } catch(NullPointerException e){
-            System.out.printf("Nullpointer returned for " + prefix);
-
+            System.out.printf("Null pointer returned for " + prefix);
         }
+        saveToFile(prefix, gameID, 0, 0, false);
     }
 
-    private void saveToFile(String prefix, String gameID, int moves, long time){
+    private void saveToFile(String prefix, String gameID, int moves, long time, boolean isValid){
 
         FileWriter out;
         try{
-            out =  new FileWriter(prefix + ".csv",true);
+            out =  new FileWriter(_directive + "/" + prefix + ".csv",true);
             out.append(gameID + ";");
             out.append(moves + ";");
-            out.append((_minRounds == moves ? "1" : "0") + ";");
-            out.append(time + "\n");
+            out.append(time + ";");
+            out.append((_minRounds == moves ? "true" : "false") + ";");
+            out.append((isValid ? "true" : "false") + "\n");
             out.close();
         }catch(Exception e){
             e.printStackTrace();
@@ -156,5 +152,19 @@ public class GameHandler {
             }
         }
         return result;
+    }
+
+    private String createNewDataFolder(){
+        Date date = new Date();
+        String folderName = new SimpleDateFormat("yyyy-MM-dd_HHmmss").format(date);
+        File dir = new File(folderName);
+        if(!dir.exists()){
+            dir.mkdir();
+        }
+        return folderName;
+    }
+
+    public String getDirective(){
+        return _directive;
     }
 }
