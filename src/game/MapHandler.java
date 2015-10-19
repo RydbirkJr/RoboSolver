@@ -39,6 +39,8 @@ public class MapHandler {
                 //Runs until a legal startField is found
             }while(!validatePosition(robotFields, field));
 
+            robotFields.add(field);
+
             //Convert i into the Core.Color enum
             Color color = Color.values()[i];
 

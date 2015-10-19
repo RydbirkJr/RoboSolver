@@ -53,11 +53,11 @@ public class GameHandler {
                     String gameID = robotPositions + "GOAL="  + goal.color.name().charAt(0) + goal.row + ":" + goal.col;
                     Game game = new Game(_gameBoard.fields,robots,goal);
                     //System.out.println(gameID);
-                        runGame(game, new BasicSolver(), Solver.NAIVE,gameID, true);
-                        runGame(game, new IddfsSolver(), Solver.IDDFS, gameID, true);
-                        runGame(game, new StatelessSolver(), Solver.STATELESS, gameID, false);
-                        runGame(game, new GraphSolver(), Solver.GRAPHv1, gameID, false);
-                        runGame(game, new GraphSolver_v2(), Solver.GRAPHv2, gameID, false);
+                    runGame(game, new IddfsSolver(), Solver.IDDFS, gameID, true);
+                    runGame(game, new BasicSolver(), Solver.NAIVE,gameID, false);
+                    runGame(game, new StatelessSolver(), Solver.STATELESS, gameID, false);
+                    runGame(game, new GraphSolver(), Solver.GRAPHv1, gameID, false);
+                    runGame(game, new GraphSolver_v2(), Solver.GRAPHv2, gameID, false);
                 }
 
                 roundWatch.stop();
@@ -107,11 +107,12 @@ public class GameHandler {
         FileWriter out;
         try{
             out =  new FileWriter(_directive + "/" + prefix + ".csv",true);
-            out.append(gameID + ";");
-            out.append(moves + ";");
-            out.append(time + ";");
-            out.append((_minRounds == moves ? "true" : "false") + ";");
-            out.append((isValid ? "true" : "false") + "\n");
+            out.append(gameID + ";"); //ID
+            out.append(moves + ";"); //# moves for solution
+            out.append(time + ";"); //Time spend
+            out.append(_minRounds + ";"); //# moves optimal
+            out.append((_minRounds == moves ? "true" : "false") + ";"); //Is optimal
+            out.append((isValid ? "true" : "false") + "\n"); //Is valid
             out.close();
         }catch(Exception e){
             e.printStackTrace();

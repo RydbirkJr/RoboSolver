@@ -8,41 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Mapped {
     public String gameID;
     public int moves;
 
-    public Mapped(String gameID, int moves){
-        this.gameID = gameID;
-        this.moves = moves;
+    public Mapped(int countOptimal, int countTotal){
+
     }
 }
 
-class PercentageOptimal{
-    public int optimalMoves;
-    public boolean isOptimal;
-
-    PercentageOptimal(int optimalMoves, boolean isOptimal){
-        this.optimalMoves = optimalMoves;
-        this.isOptimal = isOptimal;
-    }
-
-    public int getOptimalMoves(){
-        return optimalMoves;
-    }
-}
-
-class Mapped2{
-    public int moves;
-    public long percentage;
-
-    public Mapped2(int moves, long percentage){
-        this.moves = moves;
-        this.percentage = percentage;
-    }
-}
 
 /**
  * Created by Anders on 16/10/15.
@@ -60,49 +35,49 @@ public class DataHandler {
 
         for(int i = 0; i < solvers.length; i++){
             List<CsvData> data = readFile(solvers[i]);
-            List<CsvData> iddfs = readFile(Solver.IDDFS);
 
-            Stream<Mapped2> mapped = data.stream()
-                    .flatMap(v1 -> iddfs
-                            .stream()
-                            .map(p -> new Mapped(p.gameID, p.moves))
-                                    .filter(v2 -> v1.gameID.equals(v2.gameID))
-                                    .map(v2 -> new PercentageOptimal(v2.moves, v1.isOptimal)))
-                    .collect(Collectors.groupingBy(PercentageOptimal::getOptimalMoves))
-                    .entrySet()
-                    .stream()
-                    .map(i1 -> new Mapped2(i1.getKey(),
-                                    (i1.getValue()
-                                            .stream()
-                                            .filter(i2 -> i2.isOptimal)
-                                            .count()
-                                            /
-                                            ((long) i1.getValue()
-                                                    .size()))
-                            )
-                    );
+            Map<Integer, List<CsvData>> mapped = data.stream()
+                    .collect(Collectors.groupingBy((CsvData d) -> d.optimalMoves));
 
-            Map<Integer, String> res = new HashMap<>();
+            Map<Integer, String> result = new HashMap<>();
 
-            mapped.forEach(m -> res.put(m.moves, (m.percentage * 100) + ""));
+            mapped.forEach((k,v) -> {
+                double total = v.size();
+                double optimal = v.stream().filter(l -> l.isOptimal).count();
+                double percentage = optimal / total * 100.0;
 
-            System.out.println(String.format("%s before write.", solvers[i]));
-            writeToFile(solvers[i], "percentage", res);
-            System.out.println(String.format("%s after write.", solvers[i]));
+                result.put(k, percentage + "");
+            });
+
+            writeToFile(solvers[i], "percentage", result);
         }
     }
 
-    public void generateAverageTimeData(){
+    public void generateAverageTimeDataBySolution(){
         String[] solvers = new String[]{Solver.GRAPHv1, Solver.GRAPHv2, Solver.IDDFS, Solver.NAIVE, Solver.STATELESS};
 
         for(int i = 0; i < solvers.length; i++){
             List<CsvData> data = readFile(solvers[i]);
 
-            Map<Integer, Double> avg =  data.stream().collect(Collectors.groupingBy(CsvData::getMoves, Collectors.averagingLong(s -> s.time)));
+            Map<Integer, Double> avg =  data.stream().collect(Collectors.groupingBy(d -> d.moves, Collectors.averagingLong(s -> s.time)));
 
             Map<Integer, String> mapped = new HashMap<>();
             avg.forEach((k,v) -> mapped.put(k, ( (Integer) v.intValue()).toString()));
-            writeToFile(solvers[i], "avg", mapped);
+            writeToFile(solvers[i], "avg_solution", mapped);
+        }
+    }
+
+    public void generateAverageTimeDataByOptimal(){
+        String[] solvers = new String[]{Solver.GRAPHv1, Solver.GRAPHv2, Solver.IDDFS, Solver.NAIVE, Solver.STATELESS};
+
+        for(int i = 0; i < solvers.length; i++){
+            List<CsvData> data = readFile(solvers[i]);
+
+            Map<Integer, Double> avg =  data.stream().collect(Collectors.groupingBy(d -> d.optimalMoves, Collectors.averagingLong(s -> s.time)));
+
+            Map<Integer, String> mapped = new HashMap<>();
+            avg.forEach((k,v) -> mapped.put(k, ( (Integer) v.intValue()).toString()));
+            writeToFile(solvers[i], "avg_optimal", mapped);
         }
     }
 
@@ -136,8 +111,9 @@ public class DataHandler {
                 list.add(new CsvData(String.format("%s;%s;%s;%s,%s", elements[0], elements[1],elements[2],elements[3],elements[4]),
                         Integer.parseInt(elements[5]),
                         Long.parseLong(elements[6]),
-                        Boolean.parseBoolean(elements[7]),
-                        Boolean.parseBoolean(elements[8])
+                        Integer.parseInt(elements[7]),
+                        Boolean.parseBoolean(elements[8]),
+                        Boolean.parseBoolean(elements[9])
                 ));
             }
             in.close();

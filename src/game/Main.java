@@ -6,17 +6,18 @@ package game;
 public class Main {
     public static void main(String[] args){
 
-//        GameHandler game = new GameHandler();
-//        game.processGame(1000);
+        GameHandler game = new GameHandler();
+        game.processGame(1000);
 
-        String dir = "2015-10-16_131704";
+        String dir = game.getDirective();
 
         DataHandler data = new DataHandler(dir);
 
         data.generateDistributionData();
         data.generateCompletionData();
-        data.generateAverageTimeData();
-    }
+        data.generateAverageTimeDataBySolution();
+        data.generateAverageTimeDataByOptimal();
+    }   
 
 
 }

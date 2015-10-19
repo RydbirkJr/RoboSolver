@@ -39,7 +39,9 @@ Finding the optimal solution uses $O(b^k \cdot n + n^3)$ time where *b* is the b
 This algorithm is an attempt to solve the game without keeping track of each game state. The 
 obvious advantage of this is to eliminate the branching factor's impact on the running time. The algorithm does not guarantee an optimal solution. The algorithm stores information about every time a robot interacts with a field. The interaction can be split in two - when the robot moves over the field or when it lands on the field. In the latter, landing on a field is denoted a *final state* while moving over a field is denoted an *intermediate state*. The algorithm assumes that every field can only have one final state for each robot and only one intermediate state for each combination of direction and color.
 
-Finale states are queued in a min-heap queue, ordered by the number of moves. These states represent only the single robot's state, thus for each element in the queue, only one robot is processed. The robot is moved in all directions and new states are created for each visited field if no redundant states already exists for the given field. The algorithm terminates when there's no more robot states to process and returns the best result.
+***Illustrate an initial move with a single robot***
+
+Finale states are queued in a min-heap queue, ordered by the number of moves. These states represent only the single robot's state, thus for each element in the queue, only one robot is processed. The robot is moved in all directions and new states are created for each visited field if no redundant states already exists for the given field. The algorithm terminates when there are no more robot states to process and the best result is returned.
 
 ###Algorithm
 Let *S[i,j]* refer to the element storing states for *F[i,j]*. *S[i,j]* is instantiated at the first visit to *F[i,j]*. Each $s \in S$ stores final states in a hash table using the color of the robot as key. In addition, *s* stores all intermediate states in a hash table using the direction of the robot move as the key. Finally, *s* stores if a robot starts on the field.
@@ -149,6 +151,87 @@ When a given solution is found, the BFS is still applied until the heuristic fun
 ###Analysis
 The minimum moves computation is the only addition to the worst case analysis. As already described in the IDDFS solver, it uses $O(n^3)$ time and $O(n^2)$ space. Therefore, the total worst case time usage is $O(n^3+b^k \cdot n^2) = O(b^k \cdot n^2)$. Since the branching factor continues to be the dominant factor, the worst case time remains the same. The space impact of the algorithm is $O(b^k + n^2 \cdot (1 + |D|) + n^2) = O(b^k + n^2 \cdot (2 + |D|))$ and shows a slight increase in the space impact.
 
+##Summary
+Gennemgang af køretider for de forskellige.
+
+#Experimental Results
+
+##Setup
+I have compared all of the described algorithms in my own implementation in Java. All tests have been conducted on a Intel i7 2.3 GHz with 4 GB heap allocated. All tests have been conducted on the same game board but with different initial game states. Given a game board size of $16^2$ and 20 illegal starting fields for robots, there exist ~ 3 billion possible combinations. In the following, the combination of a initial game state and a given goal is referred to as a game configuration. For each initial game state, 16 goals exist. Each game configuration is processed by all algorithms in a sequential manner. An upper time limit at 40 seconds is introduced to terminate long running processes; at this point heap size becomes an issue and slows down the processing even further making the result ambigious. The result of the IDDFS is used as baseline for each game configuration. 
+
+I will process 16000 game configurations and analyse the results in the following. The primary focus will be correctness of the algorithms and the running time.
+
+##Results
+Using the result of the IDDFS a distribution of game configurations per number of required moves is shown in figure \ref{dist}. In [figure]\ref{dist} it shows that the current board averages around 6-7 required moves per game configuration. It is also shown that few solutions exist which require more than 14 moves. Solutions having more than 14 required moves to goal are therefore pruned given the insignificance of these. 
+
+![Distribution of game configurations as a function of required number of moves. \label{dist}](img/dist.pdf "")
+<!--
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\linewidth]{img/dist.pdf}
+\caption{}
+\label{fig:dist}
+\end{figure}-->
+
+\begin{figure}[htb]
+\centering
+\includegraphics[height=0.25\textheight,width=0.7\textwidth,keepaspectratio]{img/hitrate.pdf}
+\caption{The hitrate as a function of required number of moves.}
+\label{fig:hitrate}
+\end{figure}
+
+As shown in figure \ref{fig:hitrate}, the naive algorithm starts hitting the 40 seconds limit around 14 moves while the IDDFS solves every configuration. Also, the stateless and graph solutions follows each other closely with a 5-10% better hitrate for the latter. However, as the game configurations becomes more complex, the hitrate drops to ~ 50% for both solutions. Even though it seems that the hitrate is low, the graph algorithms has an accuracy close to 90% while the stateless algorithm solves the game in ~80% of the game configurations as shown in figure \ref{fig:total_hitrate}.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[height=0.25\textheight,width=0.7\textwidth,keepaspectratio]{img/total_hitrate.pdf}
+\caption{The total hitrate in percent.}
+\label{fig:total_hitrate}
+\end{figure}
+
+In figure \ref{fig:avg_optimal} the average running time is plotted as a function of the required number of moves for the given game configuration. The naive algorithm is the slowest algorithm by several degrees and has been removed from the graph to highlight the results of the other solutions but can be seen in table 1. The stateless algorithm uses 1-2 ms pr. solution no matter the number of required moves while the graph v2 algorithm is considerable faster than the IDDFS after 9 moves required.
+
+|Algorithm|1|2|3|4|5|6|7|8|9|10|11|12|13|14|
+|---------|--|--|--|--|--|--|--|--|---|---|---|----|----|----|
+|IDDFS    |0 |0 |0 |0 |0 |1 |4 |10|26 |58 |149|390 |989 |2714|
+Graph v1  |0 |0 |0 |1 |4 |12|29|69|140|312|606|1362|2096|2521|
+Graph v2  |0 |0 |0 |0 |1 |3 |5 |13|24 |53 |104|263 |444 |720 |
+|Stateless|1 |1 |2 |1 |1 |1 |1 |1 |1  |1  |1  |1   |1   |1   |
+
+Table 1: Average running times as a function of required moves. All numbers are in *ms*.
+
+Several of these numbers are the average of all game configurations with the same required moves. However, several results for the graph algorithms are not optimal and therefore the average running time given in table 1 and \ref{fig:avg_optimal} includes results where the algorithms investigated more moves than actually required. In \ref{fig:avg_solution} only the running time of results where the graph algorithms found the optimal solutions are compared. The result can also be seen in table 2. The stateless algorithm is omitted given the running time is not affected by the required number of moves.
+
+|Algorithm|1|2|3|4|5|6|7|8|9|10|11|12|13|14|
+|-----|----|-----|----|-----|----|-----|----|-----|----|-----|----|-----|----|----|
+|IDDFS    |0 |0 |0 |0 |0 |1 |4 |10 |26 |58 |149|390 |989 |2714|
+Graph v1  |0 |0 |0 |0 |2 |7 |20|44 |89 |175|335|608 |1200 |1804|
+Graph v2  |0 |0 |0 |0 |0 |1 |3 |7  |15 |28 |57 |112 |227 |375 |
+
+Table 2: Average running times as a function of required moves where the optimal solution was found. All numbers are in *ms*.
+
+\begin{figure}[htb]
+\centering
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics{img/avg_optimal.pdf}
+\caption{The average running time as a function of required number of moves.}
+\label{fig:avg_optimal}
+\end{minipage}
+\quad
+\begin{minipage}{0.45\linewidth}
+\centering
+\includegraphics{img/avg_solution.pdf}
+\caption{The average running time as a function of number of moves given by the result.}
+\label{fig:avg_solution}
+\end{minipage}
+\end{figure}
+
+Overall best performance?
+
+#Future Work
+Graph with b = 12-16
+
 #Spørgsmål
 1. I hver analyse hvor jeg refererer til *k* (moves) og *b* (branching factor) definerer jeg dem. Burde jeg introducere disse variabler allerede i baseline?
 2. I space-analysen af IDDFS-algoritmen skriver jeg: $O(b^k+k+n^2) = O(b^k+n^2)$. Er det korrekt at eliminere k når jeg reducerer, og burde jeg reducere helt til $O(b^k)$?
@@ -170,7 +253,3 @@ Hvis du har et forslag til andre kombinationer der kunne være interessante, så
 In general for graphs: A function for obstacle count vs fields -> how much of the graph is actually searched.
 - Find the maximum number of obstacles for different sizes
 -->
-
-#Experimental results
-##Setup
-##Results
