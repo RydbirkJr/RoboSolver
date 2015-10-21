@@ -18,9 +18,13 @@ public class MinimumMovesTest {
 
         for(int i = 0; i < 16; i++){
             for(int j = 0; j<16; j++){
+                System.out.print(moves1[i][j] + "\t");
                 Assert.isTrue(moves1[i][j] == moves2[i][j]);
             }
+            System.out.println();
         }
+
+
 
 
     }

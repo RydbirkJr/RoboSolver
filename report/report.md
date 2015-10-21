@@ -1,7 +1,18 @@
 #Introduction
+Mål for opgaven?
+
 ##Ricochet Robots
-Beskrivelse af spillet, problemstilling
-Mål for diverse solvers
+Ricochet Robots is a board game played on a $16 \times 16$ grid of fields and contains 17 goals. In addition, multiple obstacles are placed on the board. Four robots in different colors are placed on the board at random at the beginning of the game. The robots cannot be positioned at the same field nor on a goal field. Each goal is colored in relation to one of the four robots except for one of the goals which is reachable by all colors. The game is played by picking a goal to reach. The objective of the game is to find the minimum number of moves such that the corresponding robot lands on the given goal. The game is started and all players can declare that they are able to solve the game in a specific number of moves. When the first player declares, all the other players have one minute to find a lower (and better) number of moves. If possible, the player calling a lower number of moves demonstrates his solution and wins the round. If not, the first player to declare demonstrates his solution and wins the round. The game continues until all 17 goals have been played. The robots are then placed at random again and the game repeats.
+
+***FIGUR SOMETHING***
+
+Moving the robots are one of the characteristic parts of the game. A robot moves like a rook in chess, but it moves in a direction until it hits an obstacle or another robot. This counts as one move. Thus, a robot cannot stop on any of the intermediate fields. All robots can be moved and used as obstacles for the other robots. An example is given in ***figure something***. The robots can move in four directions, which gives that for each move, 16 possible moves can be made. This is denoted the branching factor. However, as the robots moves they are adjacent to at least one obstacle, and the branching factor is $\tilde 12$. The number of possible combinations for a given game is given by $12^k$ where *k* is the required number of moves. Given the exponential growth in possible combinations, the game presents several challenges for players and computers:
+
+* Finding a valid solution
+* Guaranteeing an optimal solution
+* Solving the game in reasonable time
+
+The game has been proven NP-Hard***REFERENCE*** which underlines that the complexity of the game is an exponential function of the required number of moves. Thus, tradeoffs between solving the game optimally and solving the game in reasonable time are at the core of developing algorithms for solving this game.
 
 ##Baseline
 Let *n* be the dimensions of the board where *n = 16*. Let *F* be the set of fields where *F[i,j]* refers to the field at position *(i,j)* starting from the top-left corner. Each field contains information about obstacles in each direction. Let *R* be the set of robots, let *GR* be the Goal Robot to reach the goal and let *OR* be the set of Obstacle Robots $\in R - \{GR\}$.
