@@ -40,7 +40,14 @@ A round starts with picking a goal to reach. All players can declare they are ab
 \label{fig:example}
 \end{figure}
 
-Moving the robots is one of the characteristic parts of the game. A robot moves like a rook in chess, but it moves in a direction until it hits an obstacle or another robot. This counts as one move. Thus, a robot cannot stop on any of the intermediate fields. All robots can be moved and used as obstacles for the other robots. An example is given in figure \ref{fig:example}. The robots can move in four directions. As a result, for each move, $|directions| \cdot |robots| = 16$ new possible moves can be made. This is also refered to as the branching factor. However, as the robots move they are adjacent to at least one obstacle, and the branching factor appromixates 12. The number of possible combinations for a given game is given by $12^k$ where *k* is the required number of moves to reach the goal. Given the exponential growth in possible combinations, the game presents three major challenges for both players and computers:
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\linewidth]{img/branching.png}
+\caption{The branching factor illustrated. In this case, the branching factor is 12 while each circle is a game state. Therefore, for each move conducted, 12 new possible moves can be made.}
+\label{fig:branching}
+\end{figure}
+
+Moving the robots is one of the characteristic parts of the game. A robot moves like a rook in chess, but it moves in a direction until it hits an obstacle or another robot. This counts as one move. Thus, a robot cannot stop on any of the intermediate fields. All robots can be moved and used as obstacles for the other robots. An example is given in figure \ref{fig:example}. The robots can move in four directions. As a result, for each move, $|directions| \cdot |robots| = 16$ new possible moves can be made. This is also refered to as the branching factor which is also illustrated in figure \ref{fig:branching}. However, as the robots move they are adjacent to at least one obstacle, and the branching factor appromixates 12. The number of possible combinations for a given game is given by $12^k$ where *k* is the required number of moves to reach the goal. Given the exponential growth in possible combinations, the game presents three major challenges for both players and computers:
 
 1. Finding a valid solution
 2. Guaranteeing an optimal solution
@@ -142,6 +149,7 @@ The algorithm will update the graph with *OR* states and perform a BFS with the 
  
 ###The Graph v1 Algorithm
 Let *G* be the graph representing the board where *G.V* is the set of vertices in the graph where *G.V[i,j]* refers to the vertex at the same position as the corresponding field in *F[i,j]*. Let *G.E* be all directional edges in *G* and let *G.Adj[v]* refer to all edges where the source is the vertex *v*. *G* will be represented in a two-dimensional array with directional edges stored in an adjacency list for each vertex. Constructing the graph is done in two passes with dynamic programming. Let $v \in G.V$ and let *E* = *G.Adj[v]*. Each edge $e \in E$ has a pointer to the next vertex, later referred to as the child of *e*. Each *e* is also denoted a directional indicator $d \in D$. While *v* has at most one edge for each direction, then $|E| \leq |D|$ is given.
+\newpage
 
 ####Construct Graph
 The graph is constructed in two passes, where the first pass is conducted in a top-down left-to-right approach. The first pass processes edges in the directions $d \in \{West, North\}$. Each *G.V[i,j]* is added an edge in direction *d* if *F[i,j]* has no obstacle in direction *d*. In the case of $d \in \{West, North \}$, the respective vertices *G.V[i,j-1]* and *G.V[i-1,j]* will be investigated. As an example, in case *F[i,j]* can move in direction *d = North* and *G.V[i-1,j]* has an edge in direction *d*, the child of that edge will also be the child of the edge in direction *d* for vertex *G.V[i,j]*. If *G.V[i-1,j]* has no edge in direction *d*, *G.V[i-1,j]* will be the child of the edge at direction *d* for vertex *G.V[i,j]*. The second pass processes edges where $d \in$ *{ East, South }* in a bottom-up right-to-left approach.

@@ -9,16 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-class Mapped {
-    public String gameID;
-    public int moves;
-
-    public Mapped(int countOptimal, int countTotal){
-
-    }
-}
-
-
 /**
  * Created by Anders on 16/10/15.
  */
@@ -31,7 +21,7 @@ public class DataHandler {
     }
 
     public void generateCompletionData(){
-        String[] solvers = new String[]{Solver.GRAPHv1, Solver.GRAPHv2, Solver.NAIVE, Solver.STATELESS};
+        String[] solvers = new String[]{Solver.IDDFS, Solver.STATELESS};
 
         for(int i = 0; i < solvers.length; i++){
             List<CsvData> data = readFile(solvers[i]);
@@ -54,7 +44,7 @@ public class DataHandler {
     }
 
     public void generateAverageTimeDataBySolution(){
-        String[] solvers = new String[]{Solver.GRAPHv1, Solver.GRAPHv2, Solver.IDDFS, Solver.NAIVE, Solver.STATELESS};
+        String[] solvers = new String[]{Solver.IDDFS, Solver.STATELESS};
 
         for(int i = 0; i < solvers.length; i++){
             List<CsvData> data = readFile(solvers[i]);
@@ -68,7 +58,7 @@ public class DataHandler {
     }
 
     public void generateAverageTimeDataByOptimal(){
-        String[] solvers = new String[]{Solver.GRAPHv1, Solver.GRAPHv2, Solver.IDDFS, Solver.NAIVE, Solver.STATELESS};
+        String[] solvers = new String[]{Solver.IDDFS, Solver.STATELESS};
 
         for(int i = 0; i < solvers.length; i++){
             List<CsvData> data = readFile(solvers[i]);
@@ -80,8 +70,6 @@ public class DataHandler {
             writeToFile(solvers[i], "avg_optimal", mapped);
         }
     }
-
-
 
     public void generateDistributionData(){
         List<CsvData> data = readFile(Solver.IDDFS);

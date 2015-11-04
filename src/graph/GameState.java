@@ -9,15 +9,15 @@ import java.util.HashMap;
  */
 public class GameState {
 
-    int moves;
-    GameState prev;
-    HashMap<Color, RobotState> states;
-    Color colorChanged;
+    public int moves;
+    public GameState prev;
+    public HashMap<Color, RobotState> states;
+    public Color colorChanged;
 
     public GameState(RobotState[] states){
         moves = 0;
         this.prev = null;
-        this.states = new HashMap<Color, RobotState>();
+        this.states = new HashMap<>();
         for (RobotState state : states){
             this.states.put(state.color, state);
         }

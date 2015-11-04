@@ -5,8 +5,10 @@ import basic_iddfs.IddfsSolver;
 import core.*;
 import graph.GraphSolver;
 import graph_v2.GraphSolver_v2;
+import graph_v3.GraphSolver_v3;
+import graph_v4.GraphSolver_v4;
 import org.springframework.util.StopWatch;
-import robo.StatelessSolver;
+import stateless.StatelessSolver;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,7 +35,7 @@ public class GameHandler {
     /**
      * Initializing function, setups all the game bounds.
      */
-    public void processGame(int iterations){
+    public void processGame(int iterations, boolean showIndividual){
 
         //printRobots();
 
@@ -52,28 +54,30 @@ public class GameHandler {
 
                     String gameID = robotPositions + "GOAL="  + goal.color.name().charAt(0) + goal.row + ":" + goal.col;
                     Game game = new Game(_gameBoard.fields,robots,goal);
-                    //System.out.println(gameID);
-                    runGame(game, new IddfsSolver(), Solver.IDDFS, gameID, true);
-                    runGame(game, new BasicSolver(), Solver.NAIVE,gameID, false);
-                    runGame(game, new StatelessSolver(), Solver.STATELESS, gameID, false);
-                    runGame(game, new GraphSolver(), Solver.GRAPHv1, gameID, false);
-                    runGame(game, new GraphSolver_v2(), Solver.GRAPHv2, gameID, false);
+                    if(showIndividual) System.out.println(gameID);
+                    runGame(game, new IddfsSolver(), Solver.IDDFS, gameID, true, showIndividual);
+//                    runGame(game, new BasicSolver(), Solver.NAIVE,gameID, false, showIndividual);
+                    runGame(game, new StatelessSolver(), Solver.STATELESS, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver(), Solver.GRAPHv1, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver_v2(), Solver.GRAPHv2, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver_v3(), Solver.GRAPHv3, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver_v4(), Solver.GRAPHv4, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver_v5(), Solver.GRAPHv5, gameID, false, showIndividual);
+//                    runGame(game, new GraphSolver_v6(), Solver.GRAPHv6, gameID, false, showIndividual);
                 }
 
                 roundWatch.stop();
                 System.out.println("Round: " + i + "\tTime: " + roundWatch.getLastTaskTimeMillis() + " ms");
         }
-        System.out.println("Terminated");
-
+        System.out.println("Tests completed.");
     }
 
-    private void runGame(Game game, IGameSolver solver, String prefix, String gameID, boolean isBasic){
+    private void runGame(Game game, IGameSolver solver, String prefix, String gameID, boolean isBasic, boolean showIndividual){
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         try{
             SolverWrapper wrapper = new SolverWrapper(solver, game, prefix, gameID);
             executor.submit(wrapper).get(40, TimeUnit.SECONDS);
-
 
             GameResult res = wrapper.getResult();
             long timeSpend = wrapper.getTime();
@@ -83,7 +87,11 @@ public class GameHandler {
             }
 
             saveToFile(prefix, gameID, res.moveCount, timeSpend, (isBasic || _minRounds <= res.moveCount));
-            //System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount);
+            if(_minRounds > res.moveCount) {
+                System.out.println(gameID);
+                System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount + "\tOptimal: " + _minRounds);
+            }
+            if(showIndividual) System.out.println(prefix + "\nTime: " + timeSpend + "ms\tMoves: " + res.moveCount + "\tOptimal: " + _minRounds);
             return;
 
 
@@ -95,6 +103,7 @@ public class GameHandler {
             executor.shutdownNow();
         } catch (ExecutionException e){
             System.out.println("Execution error for " + prefix);
+            e.printStackTrace();
             executor.shutdownNow();
         } catch(NullPointerException e){
             System.out.printf("Null pointer returned for " + prefix);

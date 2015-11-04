@@ -1,10 +1,7 @@
 package graph_v2;
 
 import core.*;
-import graph.BfsNode;
-import graph.Edge;
-import graph.Graph;
-import graph.Vertex;
+import graph.*;
 import minimum_moves.MinimumMoves;
 
 import java.util.*;
@@ -23,12 +20,12 @@ public class GraphSolver_v2 implements IGameSolver {
     @Override
     public GameResult solveGame(Game game) {
         //this.vertices = buildGraph(game.fields);
-        this.existingStates = new HashSet<String>();
+        this.existingStates = new HashSet<>();
         this.goal = game.goal;
 
         Graph graph = new Graph(game.fields);
 
-        Queue<GameState> queue = new LinkedList<GameState>();
+        Queue<GameState> queue = new LinkedList<>();
 
         Robot[] OR = new Robot[3];
         Robot GR = null;

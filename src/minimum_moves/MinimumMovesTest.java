@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class MinimumMovesTest {
 
     @Test
-    public void testMinimumMoves() throws Exception {
+    public void printMinimumMoves() throws Exception {
         GameBoard board = new MapHandler().setupGameBoard();
 
         int[][] moves1 = MinimumMoves.minimumMoves(board.fields, board.goals[0]);
